@@ -66,20 +66,35 @@ const getMhqUnit = (unitsList: any[]) => {
   ) || unitsList[0];
 };
 
-// Helper to automatically select the hospital if there is exactly one in the state
-const getAutoSelectedUnitForState = (state: string, unitsList: any[]) => {
-  if (!unitsList || unitsList.length === 0 || !state) return null;
-  const stateLower = state.toLowerCase().trim();
-  const stateUnits = unitsList.filter(u => u.state.toLowerCase().trim() === stateLower);
-  return stateUnits.length === 1 ? stateUnits[0] : null;
-};
+const FALLBACK_SANKARA_UNITS = [
+  { id: 1, name: "Sankara Eye Hospital - Kanpur", state: "Uttar Pradesh", district: "Kanpur", address: "Off GT Road, Amiliha, Tatiyaganj, Kanpur, Uttar Pradesh 209203" },
+  { id: 2, name: "Sankara Eye Hospital - Coimbatore", state: "Tamil Nadu", district: "Coimbatore", address: "16-A, Sathy Rd, Saravanampatti, Coimbatore, Tamil Nadu 641035" },
+  { id: 3, name: "Sankara Eye Hospital - Guntur", state: "Andhra Pradesh", district: "Guntur", address: "Guntur - Vijayawada Hwy, Pedakakani, Andhra Pradesh 522509" },
+  { id: 4, name: "Sankara Eye Hospital - Anand", state: "Gujarat", district: "Anand", address: "NH64, Mogar, Gujarat 388340" },
+  { id: 5, name: "Sankara Eye Hospital - Bangalore", state: "Karnataka", district: "Bengaluru", address: "Varthur Main Rd, Kundalahalli, Bengaluru, Karnataka 560037" },
+  { id: 6, name: "Sankara Eye Hospital - Shimoga", state: "Karnataka", district: "Shivamogga", address: "Thirthahalli Rd, Harakere, Shivamogga, Karnataka 577202" },
+  { id: 7, name: "Sankara Eye Hospital - Hyderabad", state: "Telangana", district: "Hyderabad", address: "Financial District, Nanakramguda, Telangana 500032" },
+  { id: 8, name: "Sankara Eye Hospital - Indore", state: "Madhya Pradesh", district: "Indore", address: "Vijay Nagar Main Rd, Indore, Madhya Pradesh 452010" },
+  { id: 9, name: "RJ Sankara Eye Hospital - Panvel", state: "Maharashtra", district: "Panvel", address: "Sector 5A, New Panvel East, Panvel, Maharashtra 410206" },
+  { id: 10, name: "Sankara Eye Hospital - Ludhiana", state: "Punjab", district: "Ludhiana", address: "Ferozepur Rd, near Wadi Haveli, Ludhiana, Punjab 141102" },
+  { id: 11, name: "Sankara Eye Hospital - Krishnankoil", state: "Tamil Nadu", district: "Krishnan Kovil", address: "Kunnur PO, Krishnan Kovil, Tamil Nadu 626126" },
+  { id: 12, name: "Sankara Eye Hospital - Varanasi", state: "Uttar Pradesh", district: "Varanasi", address: "Ring Road Phase-I, Madhopur, Varanasi, Uttar Pradesh 221003" },
+  { id: 13, name: "Sankara Eye Hospital - Jaipur", state: "Rajasthan", district: "Jaipur", address: "Central Spine Rd, Sector 2, Vidyadhar Nagar, Jaipur, Rajasthan 302039" },
+  { id: 14, name: "Sankara Eye Hospital - RS Puram CBE", state: "Tamil Nadu", district: "Coimbatore", address: "Dr Krishnasamy Mudaliyar Rd, RS Puram, Coimbatore, Tamil Nadu 641002" },
+  { id: 15, name: "SEFI MHQ - Mission Head Quarters", state: "Tamil Nadu", district: "Coimbatore", address: "16-A, Sathy Rd, Saravanampatti, Coimbatore, Tamil Nadu 641035" },
+];
 
 export default function Home() {
   const { user } = useAuth();
   const isSignedIn = !!user;
 
-  const { data: units } = useListPublicUnits();
+  const { data: rawUnits } = useListPublicUnits();
   const submitCall = useSubmitPublicEyeCall();
+
+  const activeUnits = useMemo(() => {
+    if (rawUnits && rawUnits.length > 0) return rawUnits;
+    return FALLBACK_SANKARA_UNITS;
+  }, [rawUnits]);
 
   const [submittedUnit, setSubmittedUnit] = useState<any>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -104,48 +119,89 @@ export default function Home() {
   });
 
   const emergencySelectedState = emergencyForm.watch("state");
-
-  // Automatically select the unit if there is only one hospital in the selected state or route to MHQ if out-of-region
-  useEffect(() => {
-    if (!units || !emergencySelectedState) return;
-
-    if (isOutOfRegionState(emergencySelectedState)) {
-      const mhq = getMhqUnit(units);
-      if (mhq) {
-        emergencyForm.setValue("unitId", mhq.id, { shouldValidate: true });
-      }
-      return;
-    }
-
-    const autoUnit = getAutoSelectedUnitForState(emergencySelectedState, units);
-    if (autoUnit) {
-      emergencyForm.setValue("unitId", autoUnit.id, { shouldValidate: true });
-    } else {
-      // Reset unit selection only if the currently selected unit is NOT in the selected state!
-      const currentUnitId = emergencyForm.getValues("unitId");
-      const currentUnit = units.find(u => u.id === currentUnitId);
-      if (currentUnit && currentUnit.state.toLowerCase().trim() !== emergencySelectedState.toLowerCase().trim()) {
-        emergencyForm.setValue("unitId", 0, { shouldValidate: false });
-      }
-    }
-  }, [emergencySelectedState, units, emergencyForm]);
+  const emergencySelectedDistrict = emergencyForm.watch("district");
 
   const emergencyDistricts = useMemo(() => {
-    const stateObj = INDIA_STATES.find(s => s.name === emergencySelectedState);
+    const stateObj = INDIA_STATES.find(
+      s => s.name?.toLowerCase().trim() === emergencySelectedState?.toLowerCase().trim()
+    );
     return stateObj ? stateObj.districts : [];
   }, [emergencySelectedState]);
 
   const emergencyFilteredUnits = useMemo(() => {
-    if (!units) return [];
-    if (!emergencySelectedState) return units;
-    const stateMatched = units.filter(u => u.state === emergencySelectedState);
-    return stateMatched.length > 0 ? stateMatched : units;
-  }, [units, emergencySelectedState]);
+    if (!emergencySelectedState) return activeUnits;
+    const stateMatched = activeUnits.filter(
+      (u: any) => u.state?.toLowerCase().trim() === emergencySelectedState?.toLowerCase().trim()
+    );
+    return stateMatched.length > 0 ? stateMatched : activeUnits;
+  }, [activeUnits, emergencySelectedState]);
+
+  // Smart Auto-Selection based on State & District
+  useEffect(() => {
+    if (!activeUnits || activeUnits.length === 0 || !emergencySelectedState) return;
+
+    const stateUnits = activeUnits.filter(
+      (u: any) => u.state?.toLowerCase().trim() === emergencySelectedState?.toLowerCase().trim()
+    );
+
+    // 1. If user selected a district, match hospital by district
+    if (emergencySelectedDistrict) {
+      const distLower = emergencySelectedDistrict.toLowerCase().trim();
+      
+      const matchedUnit = stateUnits.find((u: any) => {
+        const uDist = (u.district || "").toLowerCase().trim();
+        const uName = (u.name || "").toLowerCase().trim();
+        return (
+          uDist === distLower ||
+          distLower.includes(uDist) ||
+          uDist.includes(distLower) ||
+          uName.includes(distLower) ||
+          (distLower.includes("bangalore") && uName.includes("bangalore")) ||
+          (distLower.includes("bengaluru") && uName.includes("bangalore")) ||
+          (distLower.includes("shimoga") && uName.includes("shimoga")) ||
+          (distLower.includes("shivamogga") && uName.includes("shimoga")) ||
+          (distLower.includes("coimbatore") && uName.includes("coimbatore")) ||
+          (distLower.includes("kanpur") && uName.includes("kanpur")) ||
+          (distLower.includes("varanasi") && uName.includes("varanasi")) ||
+          (distLower.includes("panvel") && uName.includes("panvel")) ||
+          (distLower.includes("raigad") && uName.includes("panvel")) ||
+          (distLower.includes("mumbai") && uName.includes("panvel")) ||
+          (distLower.includes("jaipur") && uName.includes("jaipur")) ||
+          (distLower.includes("indore") && uName.includes("indore")) ||
+          (distLower.includes("ludhiana") && uName.includes("ludhiana")) ||
+          (distLower.includes("guntur") && uName.includes("guntur")) ||
+          (distLower.includes("anand") && uName.includes("anand")) ||
+          (distLower.includes("hyderabad") && uName.includes("hyderabad"))
+        );
+      });
+
+      if (matchedUnit) {
+        emergencyForm.setValue("unitId", matchedUnit.id, { shouldValidate: true });
+        return;
+      }
+    }
+
+    // 2. If state has units and current unit is not from this state, pick first unit of state
+    if (stateUnits.length > 0) {
+      const currentUnitId = emergencyForm.getValues("unitId");
+      const currentUnit = activeUnits.find((u: any) => u.id === currentUnitId);
+      if (!currentUnit || currentUnit.state?.toLowerCase().trim() !== emergencySelectedState?.toLowerCase().trim()) {
+        emergencyForm.setValue("unitId", stateUnits[0].id, { shouldValidate: true });
+      }
+      return;
+    }
+
+    // 3. Out-of-region state -> Route to MHQ
+    const mhq = getMhqUnit(activeUnits);
+    if (mhq) {
+      emergencyForm.setValue("unitId", mhq.id, { shouldValidate: true });
+    }
+  }, [emergencySelectedState, emergencySelectedDistrict, activeUnits, emergencyForm]);
 
   const assignedUnit = useMemo(() => {
     const selectedId = emergencyForm.watch("unitId");
-    return units?.find(u => u.id === selectedId);
-  }, [units, emergencyForm.watch("unitId")]);
+    return activeUnits?.find((u: any) => u.id === selectedId);
+  }, [activeUnits, emergencyForm.watch("unitId")]);
 
   const handleMobileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value;
@@ -159,7 +215,7 @@ export default function Home() {
     emergencyForm.setValue("referrerMobile", prefix + suffix.substring(0, 10), { shouldValidate: true });
   };
 
-  const onEmergencySubmit = (data: EmergencyValues) => {
+  const onEmergencySubmit = async (data: EmergencyValues) => {
     const payload = {
       referrerName: data.referrerName,
       referrerMobile: data.referrerMobile,
@@ -178,7 +234,7 @@ export default function Home() {
 
     submitCall.mutate({ data: payload }, {
       onSuccess: (response) => {
-        const finalUnit = assignedUnit || getMhqUnit(units || []);
+        const finalUnit = assignedUnit || getMhqUnit(activeUnits || []);
         setSubmittedUnit(finalUnit);
         setIsSubmitted(true);
         try {

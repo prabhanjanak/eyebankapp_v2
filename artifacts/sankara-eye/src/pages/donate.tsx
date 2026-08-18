@@ -65,6 +65,24 @@ const getAutoSelectedUnitForState = (state: string, unitsList: any[]) => {
   return stateUnits.length === 1 ? stateUnits[0] : null;
 };
 
+const FALLBACK_SANKARA_UNITS = [
+  { id: 1, name: "Sankara Eye Hospital - Kanpur", state: "Uttar Pradesh", district: "Kanpur", address: "Off GT Road, Amiliha, Tatiyaganj, Kanpur, Uttar Pradesh 209203" },
+  { id: 2, name: "Sankara Eye Hospital - Coimbatore", state: "Tamil Nadu", district: "Coimbatore", address: "16-A, Sathy Rd, Saravanampatti, Coimbatore, Tamil Nadu 641035" },
+  { id: 3, name: "Sankara Eye Hospital - Guntur", state: "Andhra Pradesh", district: "Guntur", address: "Guntur - Vijayawada Hwy, Pedakakani, Andhra Pradesh 522509" },
+  { id: 4, name: "Sankara Eye Hospital - Anand", state: "Gujarat", district: "Anand", address: "NH64, Mogar, Gujarat 388340" },
+  { id: 5, name: "Sankara Eye Hospital - Bangalore", state: "Karnataka", district: "Bengaluru", address: "Varthur Main Rd, Kundalahalli, Bengaluru, Karnataka 560037" },
+  { id: 6, name: "Sankara Eye Hospital - Shimoga", state: "Karnataka", district: "Shivamogga", address: "Thirthahalli Rd, Harakere, Shivamogga, Karnataka 577202" },
+  { id: 7, name: "Sankara Eye Hospital - Hyderabad", state: "Telangana", district: "Hyderabad", address: "Financial District, Nanakramguda, Telangana 500032" },
+  { id: 8, name: "Sankara Eye Hospital - Indore", state: "Madhya Pradesh", district: "Indore", address: "Vijay Nagar Main Rd, Indore, Madhya Pradesh 452010" },
+  { id: 9, name: "RJ Sankara Eye Hospital - Panvel", state: "Maharashtra", district: "Panvel", address: "Sector 5A, New Panvel East, Panvel, Maharashtra 410206" },
+  { id: 10, name: "Sankara Eye Hospital - Ludhiana", state: "Punjab", district: "Ludhiana", address: "Ferozepur Rd, near Wadi Haveli, Ludhiana, Punjab 141102" },
+  { id: 11, name: "Sankara Eye Hospital - Krishnankoil", state: "Tamil Nadu", district: "Krishnan Kovil", address: "Kunnur PO, Krishnan Kovil, Tamil Nadu 626126" },
+  { id: 12, name: "Sankara Eye Hospital - Varanasi", state: "Uttar Pradesh", district: "Varanasi", address: "Ring Road Phase-I, Madhopur, Varanasi, Uttar Pradesh 221003" },
+  { id: 13, name: "Sankara Eye Hospital - Jaipur", state: "Rajasthan", district: "Jaipur", address: "Central Spine Rd, Sector 2, Vidyadhar Nagar, Jaipur, Rajasthan 302039" },
+  { id: 14, name: "Sankara Eye Hospital - RS Puram CBE", state: "Tamil Nadu", district: "Coimbatore", address: "Dr Krishnasamy Mudaliyar Rd, RS Puram, Coimbatore, Tamil Nadu 641002" },
+  { id: 15, name: "SEFI MHQ - Mission Head Quarters", state: "Tamil Nadu", district: "Coimbatore", address: "16-A, Sathy Rd, Saravanampatti, Coimbatore, Tamil Nadu 641035" },
+];
+
 export default function Donate() {
   const [successData, setSuccessData] = useState<{ 
     whatsappUrl: string; 
@@ -77,7 +95,12 @@ export default function Donate() {
 
   const [isPledging, setIsPledging] = useState(false);
 
-  const { data: units } = useListPublicUnits();
+  const { data: rawUnits } = useListPublicUnits();
+
+  const activeUnits = useMemo(() => {
+    if (rawUnits && rawUnits.length > 0) return rawUnits;
+    return FALLBACK_SANKARA_UNITS;
+  }, [rawUnits]);
 
   // Pledge Form Hook
   const pledgeForm = useForm<PledgeValues>({
@@ -95,47 +118,88 @@ export default function Donate() {
   });
 
   const selectedState = pledgeForm.watch("state");
+  const selectedDistrict = pledgeForm.watch("district");
 
-  // Automatically select the unit if there is only one hospital in the selected state or route to MHQ if out-of-region
+  const districts = useMemo(() => {
+    const state = INDIA_STATES.find(s => s.name?.toLowerCase().trim() === selectedState?.toLowerCase().trim());
+    return state ? state.districts : [];
+  }, [selectedState]);
+
+  // Filter units for the selected state, or show all if out-of-region
+  const pledgeFilteredUnits = useMemo(() => {
+    if (!selectedState) return activeUnits;
+    const stateMatched = activeUnits.filter(
+      (u: any) => u.state?.toLowerCase().trim() === selectedState?.toLowerCase().trim()
+    );
+    return stateMatched.length > 0 ? stateMatched : activeUnits;
+  }, [activeUnits, selectedState]);
+
+  // Smart Auto-Selection based on State & District
   useEffect(() => {
-    if (!units || !selectedState) return;
+    if (!activeUnits || activeUnits.length === 0 || !selectedState) return;
 
-    if (isOutOfRegionState(selectedState)) {
-      const mhq = getMhqUnit(units);
-      if (mhq) {
-        pledgeForm.setValue("unitId", mhq.id, { shouldValidate: true });
+    const stateUnits = activeUnits.filter(
+      (u: any) => u.state?.toLowerCase().trim() === selectedState?.toLowerCase().trim()
+    );
+
+    // 1. If user selected a district, match hospital by district
+    if (selectedDistrict) {
+      const distLower = selectedDistrict.toLowerCase().trim();
+      
+      const matchedUnit = stateUnits.find((u: any) => {
+        const uDist = (u.district || "").toLowerCase().trim();
+        const uName = (u.name || "").toLowerCase().trim();
+        return (
+          uDist === distLower ||
+          distLower.includes(uDist) ||
+          uDist.includes(distLower) ||
+          uName.includes(distLower) ||
+          (distLower.includes("bangalore") && uName.includes("bangalore")) ||
+          (distLower.includes("bengaluru") && uName.includes("bangalore")) ||
+          (distLower.includes("shimoga") && uName.includes("shimoga")) ||
+          (distLower.includes("shivamogga") && uName.includes("shimoga")) ||
+          (distLower.includes("coimbatore") && uName.includes("coimbatore")) ||
+          (distLower.includes("kanpur") && uName.includes("kanpur")) ||
+          (distLower.includes("varanasi") && uName.includes("varanasi")) ||
+          (distLower.includes("panvel") && uName.includes("panvel")) ||
+          (distLower.includes("raigad") && uName.includes("panvel")) ||
+          (distLower.includes("mumbai") && uName.includes("panvel")) ||
+          (distLower.includes("jaipur") && uName.includes("jaipur")) ||
+          (distLower.includes("indore") && uName.includes("indore")) ||
+          (distLower.includes("ludhiana") && uName.includes("ludhiana")) ||
+          (distLower.includes("guntur") && uName.includes("guntur")) ||
+          (distLower.includes("anand") && uName.includes("anand")) ||
+          (distLower.includes("hyderabad") && uName.includes("hyderabad"))
+        );
+      });
+
+      if (matchedUnit) {
+        pledgeForm.setValue("unitId", matchedUnit.id, { shouldValidate: true });
+        return;
+      }
+    }
+
+    // 2. If state has units and current unit is not from this state, pick first unit of state
+    if (stateUnits.length > 0) {
+      const currentUnitId = pledgeForm.getValues("unitId");
+      const currentUnit = activeUnits.find((u: any) => u.id === currentUnitId);
+      if (!currentUnit || currentUnit.state?.toLowerCase().trim() !== selectedState?.toLowerCase().trim()) {
+        pledgeForm.setValue("unitId", stateUnits[0].id, { shouldValidate: true });
       }
       return;
     }
 
-    const autoUnit = getAutoSelectedUnitForState(selectedState, units);
-    if (autoUnit) {
-      pledgeForm.setValue("unitId", autoUnit.id, { shouldValidate: true });
-    } else {
-      const currentUnitId = pledgeForm.getValues("unitId");
-      const currentUnit = units.find(u => u.id === currentUnitId);
-      if (currentUnit && currentUnit.state.toLowerCase().trim() !== selectedState.toLowerCase().trim()) {
-        pledgeForm.setValue("unitId", 0, { shouldValidate: false });
-      }
+    // 3. Out-of-region state -> Route to MHQ
+    const mhq = getMhqUnit(activeUnits);
+    if (mhq) {
+      pledgeForm.setValue("unitId", mhq.id, { shouldValidate: true });
     }
-  }, [selectedState, units, pledgeForm]);
-
-  const districts = useMemo(() => {
-    const state = INDIA_STATES.find(s => s.name === selectedState);
-    return state ? state.districts : [];
-  }, [selectedState]);
-
-  const pledgeFilteredUnits = useMemo(() => {
-    if (!units) return [];
-    if (!selectedState) return units;
-    const matched = units.filter(u => u.state === selectedState);
-    return matched.length > 0 ? matched : units;
-  }, [units, selectedState]);
+  }, [selectedState, selectedDistrict, activeUnits, pledgeForm]);
 
   const pledgeAssignedUnit = useMemo(() => {
     const selectedId = pledgeForm.watch("unitId");
-    return units?.find(u => u.id === selectedId);
-  }, [units, pledgeForm.watch("unitId")]);
+    return activeUnits?.find((u: any) => u.id === selectedId);
+  }, [activeUnits, pledgeForm.watch("unitId")]);
 
   const handleMobileInput = (e: React.ChangeEvent<HTMLInputElement>, setValueFn: (val: string) => void) => {
     let val = e.target.value;
@@ -163,7 +227,7 @@ export default function Donate() {
   const onPledgeSubmit = async (data: PledgeValues) => {
     if (isPledging) return;
     setIsPledging(true);
-    const selectedUnit = units?.find(u => u.id === data.unitId);
+    const selectedUnit = activeUnits?.find((u: any) => u.id === data.unitId);
     
     const dobYear = new Date().getFullYear() - data.pledgerAge;
     const dateOfBirth = `${dobYear}-01-01`;
