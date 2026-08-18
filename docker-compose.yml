@@ -1,0 +1,86 @@
+# ==============================================================================
+# SANKARA EYE BANK & DONATION SYSTEM - DOCKER COMPOSE CONFIGURATION
+# Production-ready full stack with PostgreSQL and Auto-Restart
+#
+# Quickstart:
+#   docker compose up -d --build
+#   docker compose logs -f
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Main Web Application & REST API Server
+  # ----------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sankara_eyebank_app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DATABASE_URL: postgresql://${DB_USER:-sankara_user}:${DB_PASSWORD:-sankara_secure_pass_2026}@db:5432/${DB_NAME:-sankara_eyebank}
+      DATABASE_SSL: "false"
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8080}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+      JWT_SECRET: ${JWT_SECRET:-8f9a2b7c4d5e6f1a0b3c5d7e9f2a4b6c8d0e1f3a5b7c9d1e3f5a7b9c1d3e5f7a}
+      SESSION_SECRET: ${SESSION_SECRET:-1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5f7a8f9a2b7c4d5e6f1a0b3c5d7e9f}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-Sankara Eye Bank Alerts <alerts@sankaraeye.com>}
+      SETTINGS_FILE_PATH: /app/data/settings.json
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - sankara_data:/app/data
+      - sankara_uploads:/app/uploads
+      - sankara_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ----------------------------------------------------------------------------
+  # 2. PostgreSQL Database
+  # ----------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    container_name: sankara_eyebank_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-sankara_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sankara_secure_pass_2026}
+      POSTGRES_DB: ${DB_NAME:-sankara_eyebank}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-sankara_user} -d $${POSTGRES_DB:-sankara_eyebank}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+# ------------------------------------------------------------------------------
+# Persistent Docker Volumes
+# ------------------------------------------------------------------------------
+volumes:
+  postgres_data:
+    name: sankara_postgres_data
+  sankara_data:
+    name: sankara_app_data
+  sankara_uploads:
+    name: sankara_app_uploads
+  sankara_logs:
+    name: sankara_app_logs
