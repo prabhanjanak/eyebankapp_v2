@@ -85,7 +85,7 @@ sudo npm install -g pnpm pm2
 sudo -u postgres psql
 
 # 2. Inside PostgreSQL prompt, run the following SQL commands:
-CREATE USER sankara_user WITH ENCRYPTED PASSWORD 'YourStrongPassword123!#';
+CREATE USER sankara_user WITH ENCRYPTED PASSWORD 'sankara_secure_pass_2026';
 CREATE DATABASE sankara_eyebank OWNER sankara_user;
 GRANT ALL PRIVILEGES ON DATABASE sankara_eyebank TO sankara_user;
 \q
@@ -136,7 +136,7 @@ APP_BASE_URL=https://eyebank.your-domain.com
 CORS_ORIGIN=https://eyebank.your-domain.com
 
 # Database Connection (Match credentials created in Step 2)
-DATABASE_URL=postgresql://sankara_user:YourStrongPassword123!#@127.0.0.1:5432/sankara_eyebank
+DATABASE_URL=postgresql://sankara_user:sankara_secure_pass_2026@127.0.0.1:5432/sankara_eyebank
 DATABASE_SSL=false
 DATABASE_POOL_MAX=20
 
