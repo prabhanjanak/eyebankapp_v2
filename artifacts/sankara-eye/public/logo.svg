@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 60" fill="none">
+  <!-- Eye icon group -->
+  <g transform="translate(2, 4)">
+    <!-- Outer flame/eye shape -->
+    <ellipse cx="26" cy="26" rx="24" ry="24" fill="none" stroke="#c85a00" stroke-width="2"/>
+    <!-- Eye white -->
+    <path d="M6 26 Q26 8 46 26 Q26 44 6 26Z" fill="#fff" stroke="#c85a00" stroke-width="1.5"/>
+    <!-- Iris -->
+    <circle cx="26" cy="26" r="9" fill="#e8650a"/>
+    <!-- Pupil -->
+    <circle cx="26" cy="26" r="5" fill="#7a2c00"/>
+    <!-- Highlight -->
+    <circle cx="29" cy="23" r="2" fill="white" opacity="0.7"/>
+    <!-- Top flame petals -->
+    <path d="M26 3 Q30 10 26 16 Q22 10 26 3Z" fill="#e8650a" opacity="0.85"/>
+    <path d="M38 8 Q38 16 32 18 Q34 10 38 8Z" fill="#e8650a" opacity="0.7"/>
+    <path d="M14 8 Q10 16 16 18 Q14 10 14 8Z" fill="#e8650a" opacity="0.7"/>
+  </g>
+
+  <!-- Text block -->
+  <g transform="translate(60, 0)">
+    <!-- SANKARA EYE HOSPITAL -->
+    <text
+      x="0" y="34"
+      font-family="'Arial Black', 'Arial', sans-serif"
+      font-size="28"
+      font-weight="900"
+      letter-spacing="1"
+      fill="#1a1a2e"
+    >SANKARA EYE HOSPITAL</text>
+    <!-- Registered trademark -->
+    <text x="352" y="16" font-family="Arial" font-size="12" fill="#1a1a2e">®</text>
+    <!-- Tagline -->
+    <text
+      x="1" y="52"
+      font-family="'Arial', sans-serif"
+      font-size="12"
+      font-weight="600"
+      letter-spacing="3.5"
+      fill="#e8650a"
+    >YOUR VISION OUR MISSION</text>
+  </g>
+</svg>

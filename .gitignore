@@ -1,0 +1,77 @@
+# ==============================================================================
+# Git Ignore Rules - Sankara Eye Bank & Donation System
+# ==============================================================================
+
+# Node dependencies
+node_modules/
+node_modules.nosync/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Compiled & Build Outputs
+dist/
+dist/public/
+build/
+build.nosync/
+out-tsc/
+*.tsbuildinfo
+tmp/
+
+# Runtime Logs & PM2 Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime User Data & Dynamic Uploads
+data/
+uploads/
+settings.json
+
+# Environment Secrets (NEVER COMMIT SECRETS)
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+!.env.example
+
+# IDE & Editor files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-workspace
+*.swp
+*.swo
+
+# OS System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Mobile & Flutter Native Build Caches
+.expo/
+.expo-shared/
+.gradle/
+.gradle_home/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+ios/Pods/
+ios/Podfile.lock
+android/.gradle/
+android/app/build/
+android/build/
+capacitor-cordova-android-plugins/
+releases/*.apk
+scratch/

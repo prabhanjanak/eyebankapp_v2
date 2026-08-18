@@ -1,0 +1,1090 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Sankara Eye Donation Management System API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication & user profile
+  - name: units
+    description: Sankara hospital units
+  - name: users
+    description: User management (Admin only)
+  - name: eye-calls
+    description: Eye donation call management
+  - name: dashboard
+    description: Dashboard statistics & analytics
+  - name: public
+    description: Public endpoints (no auth required)
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # ─── AUTH ───────────────────────────────────────────────────────────────────
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current authenticated user with role and unit
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+
+  /auth/profile:
+    patch:
+      operationId: updateProfile
+      tags: [auth]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Log in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          description: Invalid email or password
+        "401":
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Log out current session
+      responses:
+        "200":
+          description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/change-password:
+    post:
+      operationId: changePassword
+      tags: [auth]
+      summary: Change password (used on profile or forced change)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordInput"
+      responses:
+        "200":
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: Invalid password or constraint error
+        "401":
+          description: Unauthorized
+
+  # ─── UNITS ──────────────────────────────────────────────────────────────────
+  /units:
+    get:
+      operationId: listUnits
+      tags: [units]
+      summary: List all Sankara hospital units
+      responses:
+        "200":
+          description: List of units
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Unit"
+    post:
+      operationId: createUnit
+      tags: [units]
+      summary: Create a new hospital unit (Admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitInput"
+      responses:
+        "201":
+          description: Created unit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+
+  /units/{id}:
+    get:
+      operationId: getUnit
+      tags: [units]
+      summary: Get a specific unit by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Unit details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "404":
+          description: Unit not found
+    patch:
+      operationId: updateUnit
+      tags: [units]
+      summary: Update a unit (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitUpdate"
+      responses:
+        "200":
+          description: Updated unit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "404":
+          description: Unit not found
+    delete:
+      operationId: deleteUnit
+      tags: [units]
+      summary: Delete a unit (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Unit not found
+
+  # ─── USERS ──────────────────────────────────────────────────────────────────
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all users (Admin only)
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AppUser"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Create a new user (Admin only — all users must be created by MHQ admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppUser"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get a specific user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppUser"
+        "404":
+          description: User not found
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update a user (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppUser"
+        "404":
+          description: User not found
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      summary: Delete a user (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: User not found
+
+  /users/{id}/toggle-active:
+    patch:
+      operationId: toggleUserActive
+      tags: [users]
+      summary: Activate or deactivate a user (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppUser"
+        "404":
+          description: User not found
+
+  /users/{id}/reset-password:
+    post:
+      operationId: resetUserPassword
+      tags: [users]
+      summary: Reset a user's password (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+      responses:
+        "200":
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: User not found
+
+  # ─── EYE CALLS ──────────────────────────────────────────────────────────────
+  /eye-calls:
+    get:
+      operationId: listEyeCalls
+      tags: [eye-calls]
+      summary: List eye donation calls (filtered by role/unit)
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [new, contacted, team_sent, completed, cancelled]
+        - name: unitId
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Paginated list of eye calls
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EyeCallList"
+    post:
+      operationId: createEyeCall
+      tags: [eye-calls]
+      summary: Create a new eye donation call (requires auth for internal, public uses separate endpoint)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EyeCallInput"
+      responses:
+        "201":
+          description: Created eye call
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EyeCall"
+        "400":
+          description: Invalid input
+
+  /eye-calls/{id}:
+    get:
+      operationId: getEyeCall
+      tags: [eye-calls]
+      summary: Get a specific eye call by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Eye call details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EyeCall"
+        "404":
+          description: Eye call not found
+    patch:
+      operationId: updateEyeCall
+      tags: [eye-calls]
+      summary: Update an eye call (status, notes, etc.)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EyeCallUpdate"
+      responses:
+        "200":
+          description: Updated eye call
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EyeCall"
+        "404":
+          description: Eye call not found
+    delete:
+      operationId: deleteEyeCall
+      tags: [eye-calls]
+      summary: Delete an eye call (Admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Eye call not found
+
+  /eye-calls/{id}/status:
+    patch:
+      operationId: updateEyeCallStatus
+      tags: [eye-calls]
+      summary: Update eye call status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StatusUpdate"
+      responses:
+        "200":
+          description: Updated eye call
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EyeCall"
+        "404":
+          description: Eye call not found
+
+  # ─── PUBLIC FORM ─────────────────────────────────────────────────────────────
+  /public/eye-calls:
+    post:
+      operationId: submitPublicEyeCall
+      tags: [public]
+      summary: Submit public eye donation form (no auth required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicEyeCallInput"
+      responses:
+        "201":
+          description: Submitted successfully, includes WhatsApp message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicEyeCallResponse"
+        "400":
+          description: Invalid input
+
+  /public/units:
+    get:
+      operationId: listPublicUnits
+      tags: [public]
+      summary: List active units for public form selection
+      responses:
+        "200":
+          description: List of active units
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PublicUnit"
+
+  # ─── DASHBOARD ──────────────────────────────────────────────────────────────
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get dashboard statistics (total calls, by status, by unit)
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /dashboard/recent-calls:
+    get:
+      operationId: getRecentCalls
+      tags: [dashboard]
+      summary: Get recent eye calls for activity feed
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Recent eye calls
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EyeCall"
+
+  /dashboard/calls-by-unit:
+    get:
+      operationId: getCallsByUnit
+      tags: [dashboard]
+      summary: Get eye calls grouped by unit
+      responses:
+        "200":
+          description: Calls grouped by unit
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UnitCallCount"
+
+  /dashboard/calls-by-status:
+    get:
+      operationId: getCallsByStatus
+      tags: [dashboard]
+      summary: Get eye calls grouped by status
+      responses:
+        "200":
+          description: Calls grouped by status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StatusCallCount"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+
+    # ─── UNIT ─────────────────────────────────────────────────────────────────
+    Unit:
+      type: object
+      required: [id, name, state, district, coordinatorName, coordinatorWhatsapp, coordinatorEmail, isActive, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        state:
+          type: string
+        district:
+          type: string
+        address:
+          type: ["string", "null"]
+        coordinatorName:
+          type: string
+        coordinatorWhatsapp:
+          type: string
+        coordinatorEmail:
+          type: string
+          format: email
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UnitInput:
+      type: object
+      required: [name, state, district, coordinatorName, coordinatorWhatsapp, coordinatorEmail]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        state:
+          type: string
+          minLength: 1
+        district:
+          type: string
+          minLength: 1
+        address:
+          type: string
+        coordinatorName:
+          type: string
+          minLength: 1
+        coordinatorWhatsapp:
+          type: string
+          minLength: 10
+        coordinatorEmail:
+          type: string
+          format: email
+          minLength: 1
+        isActive:
+          type: boolean
+          default: true
+
+    UnitUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        state:
+          type: string
+        district:
+          type: string
+        address:
+          type: string
+        coordinatorName:
+          type: string
+        coordinatorWhatsapp:
+          type: string
+        coordinatorEmail:
+          type: string
+          format: email
+        isActive:
+          type: boolean
+
+    PublicUnit:
+      type: object
+      required: [id, name, state, district]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        state:
+          type: string
+        district:
+          type: string
+        address:
+          type: ["string", "null"]
+
+    # ─── USER ─────────────────────────────────────────────────────────────────
+    AppUser:
+      type: object
+      required: [id, clerkId, email, name, role, isActive, mustChangePassword, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        clerkId:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [super_admin, eye_bank_head, unit_coordinator]
+        unitId:
+          type: ["integer", "null"]
+        unitName:
+          type: ["string", "null"]
+        isActive:
+          type: boolean
+        mustChangePassword:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserProfile:
+      type: object
+      required: [id, clerkId, email, name, role, isActive, mustChangePassword]
+      properties:
+        id:
+          type: integer
+        clerkId:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [super_admin, eye_bank_head, unit_coordinator]
+        unitId:
+          type: ["integer", "null"]
+        unitName:
+          type: ["string", "null"]
+        isActive:
+          type: boolean
+        mustChangePassword:
+          type: boolean
+
+    UserInput:
+      type: object
+      required: [email, name, role]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          minLength: 1
+        role:
+          type: string
+          enum: [super_admin, eye_bank_head, unit_coordinator]
+        unitId:
+          type: ["integer", "null"]
+        password:
+          type: string
+          minLength: 8
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+          enum: [super_admin, eye_bank_head, unit_coordinator]
+        unitId:
+          type: ["integer", "null"]
+        isActive:
+          type: boolean
+
+    ProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+
+    PasswordReset:
+      type: object
+      required: [newPassword]
+      properties:
+        newPassword:
+          type: string
+          minLength: 8
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    ChangePasswordInput:
+      type: object
+      required: [oldPassword, newPassword]
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+          minLength: 8
+
+    # ─── EYE CALL ─────────────────────────────────────────────────────────────
+    EyeCall:
+      type: object
+      required: [id, callId, donorName, donorAge, donorGender, timeOfDeath, causeOfDeath, referrerName, referrerMobile, referrerRelationship, state, district, pincode, address, unitId, unitName, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        callId:
+          type: string
+        donorName:
+          type: string
+        donorAge:
+          type: integer
+        donorGender:
+          type: string
+          enum: [male, female, other]
+        timeOfDeath:
+          type: string
+        causeOfDeath:
+          type: string
+        referrerName:
+          type: string
+        referrerMobile:
+          type: string
+        referrerRelationship:
+          type: string
+        state:
+          type: string
+        district:
+          type: string
+        pincode:
+          type: string
+        address:
+          type: string
+        unitId:
+          type: integer
+        unitName:
+          type: string
+        status:
+          type: string
+          enum: [new, contacted, team_sent, completed, cancelled]
+        notes:
+          type: ["string", "null"]
+        thirdPartyHospitalDetails:
+          type: ["string", "null"]
+        thirdPartyHelperContact:
+          type: ["string", "null"]
+        attendedByUserId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    EyeCallList:
+      type: object
+      required: [data, total, page, limit]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/EyeCall"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    EyeCallInput:
+      type: object
+      required: [donorName, donorAge, donorGender, timeOfDeath, causeOfDeath, referrerName, referrerMobile, referrerRelationship, state, district, pincode, address, unitId]
+      properties:
+        donorName:
+          type: string
+          minLength: 1
+        donorAge:
+          type: integer
+          minimum: 0
+          maximum: 120
+        donorGender:
+          type: string
+          enum: [male, female, other]
+        timeOfDeath:
+          type: string
+        causeOfDeath:
+          type: string
+        referrerName:
+          type: string
+          minLength: 1
+        referrerMobile:
+          type: string
+          minLength: 10
+        referrerRelationship:
+          type: string
+        state:
+          type: string
+        district:
+          type: string
+        pincode:
+          type: string
+        address:
+          type: string
+        unitId:
+          type: integer
+        notes:
+          type: string
+        thirdPartyHospitalDetails:
+          type: string
+        thirdPartyHelperContact:
+          type: string
+        attendedByUserId:
+          type: integer
+
+    EyeCallUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [new, contacted, team_sent, completed, cancelled]
+        notes:
+          type: string
+        thirdPartyHospitalDetails:
+          type: string
+        thirdPartyHelperContact:
+          type: string
+        attendedByUserId:
+          type: integer
+
+    StatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [new, contacted, team_sent, completed, cancelled]
+        notes:
+          type: string
+
+    PublicEyeCallInput:
+      type: object
+      required: [donorName, donorAge, donorGender, timeOfDeath, causeOfDeath, referrerName, referrerMobile, referrerRelationship, state, district, pincode, address, unitId]
+      properties:
+        donorName:
+          type: string
+          minLength: 1
+        donorAge:
+          type: integer
+          minimum: 0
+          maximum: 120
+        donorGender:
+          type: string
+          enum: [male, female, other]
+        timeOfDeath:
+          type: string
+        causeOfDeath:
+          type: string
+        referrerName:
+          type: string
+          minLength: 1
+        referrerMobile:
+          type: string
+          minLength: 10
+        referrerRelationship:
+          type: string
+        state:
+          type: string
+        district:
+          type: string
+        pincode:
+          type: string
+        address:
+          type: string
+        unitId:
+          type: integer
+
+    PublicEyeCallResponse:
+      type: object
+      required: [eyeCall, whatsappMessage, whatsappUrl]
+      properties:
+        eyeCall:
+          $ref: "#/components/schemas/EyeCall"
+        whatsappMessage:
+          type: string
+        whatsappUrl:
+          type: string
+
+    # ─── DASHBOARD ────────────────────────────────────────────────────────────
+    DashboardStats:
+      type: object
+      required: [totalCalls, newCalls, contactedCalls, teamSentCalls, completedCalls, cancelledCalls, totalUnits, activeUnits]
+      properties:
+        totalCalls:
+          type: integer
+        newCalls:
+          type: integer
+        contactedCalls:
+          type: integer
+        teamSentCalls:
+          type: integer
+        completedCalls:
+          type: integer
+        cancelledCalls:
+          type: integer
+        totalUnits:
+          type: integer
+        activeUnits:
+          type: integer
+
+    UnitCallCount:
+      type: object
+      required: [unitId, unitName, count]
+      properties:
+        unitId:
+          type: integer
+        unitName:
+          type: string
+        count:
+          type: integer
+
+    StatusCallCount:
+      type: object
+      required: [status, count]
+      properties:
+        status:
+          type: string
+        count:
+          type: integer
