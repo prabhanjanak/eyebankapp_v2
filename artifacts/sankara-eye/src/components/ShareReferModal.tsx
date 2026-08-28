@@ -74,10 +74,11 @@ export default function ShareReferModal({ trigger, variant = "default" }: ShareR
       <DialogTrigger asChild>
         {trigger || (
           <Button 
-            className="bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-xs sm:text-sm px-4 py-2 flex items-center gap-2 shadow-sm cursor-pointer transition-all hover:scale-[1.02] border-0"
+            className="bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-xs px-2.5 sm:px-4 py-1.5 sm:py-2 flex items-center gap-1.5 shadow-sm cursor-pointer transition-all hover:scale-[1.02] border-0 shrink-0"
           >
-            <Share2 className="h-4 w-4" />
-            <span>Refer to Someone</span>
+            <Share2 className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Refer to Someone</span>
+            <span className="inline sm:hidden">Share</span>
           </Button>
         )}
       </DialogTrigger>
