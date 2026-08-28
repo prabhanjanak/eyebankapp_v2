@@ -262,20 +262,20 @@ export default function Awareness() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="lg:col-span-5 flex justify-center w-full"
           >
-            {/* Elegant Hero Image Frame containing the real presentation hero image */}
-            <div className="bg-white p-3 rounded-3xl border border-orange-100 w-full max-w-md shadow-xl relative overflow-hidden group">
+            {/* Elegant Hero Image Frame containing the real human awareness photo */}
+            <div className="bg-white p-3.5 rounded-3xl border border-orange-100 w-full max-w-lg shadow-xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent pointer-events-none" />
               <img 
-                src={`${BASE_PATH}/awareness/image1.jpeg`} 
-                alt="Eye Donation Awareness Hero" 
-                className="w-full h-auto aspect-[4/3] object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-700 shadow-sm"
+                src={`${BASE_PATH}/awareness/eye_donation_hero.jpg`} 
+                alt="Corneal Blindness and the Hope of Eye Donation" 
+                className="w-full h-auto aspect-[16/9] object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-700 shadow-md"
               />
-              <div className="bg-orange-50 border border-orange-100 p-4 rounded-2xl shadow-sm text-center mt-3">
+              <div className="bg-orange-50/80 border border-orange-100 p-4 rounded-2xl shadow-xs text-center mt-3">
                 <p className="text-sm font-black text-orange-800 uppercase tracking-widest mb-1 flex items-center justify-center gap-1.5">
-                  <Heart className="h-4.5 w-4.5 text-orange-600 fill-orange-500" /> The Legacy of Love
+                  <Heart className="h-4.5 w-4.5 text-orange-600 fill-orange-500" /> A Real Chance at Sight
                 </p>
                 <p className="text-xs font-semibold text-slate-655 leading-relaxed">
-                  Your final choice lets you pass on the light of sight to another. Live on in their vision.
+                  Corneal blindness keeps over 10 million in darkness. Your one noble decision to donate can restore vision and dignity to two waiting lives.
                 </p>
               </div>
             </div>
