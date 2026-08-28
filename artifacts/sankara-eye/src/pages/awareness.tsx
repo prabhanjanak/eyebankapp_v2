@@ -5,7 +5,7 @@ import { BASE_PATH } from "@/lib/constants";
 import { motion, useScroll, useSpring } from "framer-motion";
 import {
   Eye, Clock, Heart, Award, ArrowLeft, ArrowRight, ShieldAlert,
-  CheckCircle2, AlertOctagon, Activity, FileText, Sparkles, BookOpen, Info, ShieldCheck, Microscope, Phone, Share2
+  CheckCircle2, AlertOctagon, Activity, FileText, Sparkles, BookOpen, Info, ShieldCheck, Microscope, Phone, Share2, Stethoscope
 } from "lucide-react";
 import ShareReferModal from "@/components/ShareReferModal";
 
@@ -702,101 +702,146 @@ export default function Awareness() {
       </section>
 
       {/* ── CLINICAL RETRIEVAL PROCEDURES (CLEAN DYNAMIC STEPS) ───────────── */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white border-b border-orange-100/50">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           
-          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="inline-flex items-center gap-2 bg-orange-100/80 text-orange-800 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+              <Stethoscope className="h-4 w-4 text-orange-600" /> Surgical Standards & Protocols
+            </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-['Outfit']">
-              The Journey of Restoration
+              The Two Medical Retrieval Procedures
             </h2>
-            <p className="text-slate-655 font-semibold text-base md:text-lg max-w-2xl mx-auto">
-              Tissue collection is a sterile surgical procedure conducted by certified specialists in under 20 minutes. It leaves no cosmetic changes to the face.
+            <p className="text-slate-655 font-semibold text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+              Eye retrieval is a gentle, sterile 15–20 minute surgical process performed by trained eye bank doctors. <strong>It causes zero facial disfigurement or visible changes.</strong>
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
             
-            {/* Corneal button excision */}
+            {/* Procedure 1: In-Situ Corneoscleral Button Excision */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="bg-[#FCFBF9] border border-orange-100/50 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm hover:border-orange-200"
+              className="bg-[#FCFBF9] border border-orange-200/70 rounded-3xl p-7 md:p-9 flex flex-col justify-between shadow-md hover:border-orange-300 transition-all"
             >
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-700 border border-orange-200/50 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                  <Microscope className="h-4 w-4" /> Procedure 1
+              <div className="space-y-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-2 bg-orange-500 text-white px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-sm">
+                    <Microscope className="h-4 w-4" /> Procedure 1
+                  </div>
+                  <span className="text-[11px] font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full flex items-center gap-1">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Most Preferred Modern Technique
+                  </span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-['Outfit']">Corneal Button Excision</h3>
-                <p className="text-sm text-slate-600 font-semibold leading-relaxed">
-                  Only the transparent cornea (the front button) and a small surrounding border of sclera is excised. The structural integrity of the eyeball remains completely undisturbed.
-                </p>
+
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 font-['Outfit']">
+                    In-Situ Corneoscleral Excision
+                  </h3>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mt-2">
+                    Only the clear transparent cornea (the front eye button) with a 2–3mm scleral rim is excised. The natural eyeball remains completely intact in the eye socket.
+                  </p>
+                </div>
+
+                {/* Clean Clinical Steps UI */}
+                <div className="space-y-3 pt-2">
+                  <p className="text-xs text-orange-700 font-black uppercase tracking-widest flex items-center gap-1.5">
+                    <Activity className="h-4 w-4 text-orange-500" /> Surgical Sequence:
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { step: "01", title: "Sterilization & Exposure", desc: "Sterile saline and povidone-iodine ocular antisepsis with speculum insertion." },
+                      { step: "02", title: "Circumferential Incision", desc: "Careful 360° scleral incision made 2–3mm posterior to the limbal margin." },
+                      { step: "03", title: "Tissue Separation", desc: "Gentle excision of the corneoscleral disc without disturbing inner structures." },
+                      { step: "04", title: "Cornisol / MK Medium", desc: "Immediate immersion in sterile nutrient preservation solution at 4°C." }
+                    ].map((item, idx) => (
+                      <div key={idx} className="bg-white border border-orange-100 p-4 rounded-2xl shadow-xs hover:border-orange-300 transition-colors">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="bg-orange-100 text-orange-800 font-black text-[11px] px-2 py-0.5 rounded-lg">
+                            {item.step}
+                          </span>
+                          <h4 className="font-extrabold text-xs text-slate-900">{item.title}</h4>
+                        </div>
+                        <p className="text-[11px] font-medium text-slate-500 leading-relaxed">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              
-              {/* Formatted step-by-step layout using real clinical images from PPT */}
-              <div className="mt-8 space-y-4">
-                <p className="text-xs text-orange-655 font-extrabold uppercase tracking-widest">Surgical Sequence Steps (Real Images):</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    { img: "image6.jpeg", label: "Step 1" },
-                    { img: "image7.jpeg", label: "Step 2" },
-                    { img: "image9.jpeg", label: "Step 3" },
-                    { img: "image8.gif", label: "Step 4" }
-                  ].map((step, idx) => (
-                    <div key={idx} className="bg-white p-2 rounded-2xl border border-orange-100 hover:border-orange-300 transition-all group/step relative shadow-xs">
-                      <img 
-                        src={`${BASE_PATH}/awareness/${step.img}`} 
-                        alt={`Corneal Button step ${idx + 1}`} 
-                        className="w-full h-16 object-cover rounded-xl group-hover/step:scale-[1.03] transition-transform"
-                      />
-                      <span className="absolute top-3.5 left-3.5 bg-slate-900/90 text-[10px] font-black text-orange-400 px-1.5 py-0.5 rounded border border-white/10">
-                        {step.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+
+              <div className="mt-6 pt-4 border-t border-orange-100/70 flex items-center justify-between text-xs font-bold text-orange-800">
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-orange-600" /> Duration: 15–20 Minutes
+                </span>
+                <span className="bg-orange-50 border border-orange-200 px-2.5 py-1 rounded-xl text-[11px]">
+                  Performed On-Site (Home / Hospital)
+                </span>
               </div>
             </motion.div>
 
-            {/* Enucleation */}
+            {/* Procedure 2: Whole Globe Enucleation */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="bg-[#FCFBF9] border border-orange-100/50 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm hover:border-orange-200"
+              className="bg-[#FCFBF9] border border-sky-200/70 rounded-3xl p-7 md:p-9 flex flex-col justify-between shadow-md hover:border-sky-300 transition-all"
             >
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-1.5 bg-sky-100 text-sky-700 border border-sky-200/50 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                  <FileText className="h-4 w-4" /> Procedure 2
+              <div className="space-y-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-2 bg-sky-600 text-white px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-sm">
+                    <FileText className="h-4 w-4" /> Procedure 2
+                  </div>
+                  <span className="text-[11px] font-extrabold bg-sky-100 text-sky-800 px-3 py-1 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="h-3.5 w-3.5 text-sky-600" /> Complete Laboratory Evaluation
+                  </span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-['Outfit']">Whole Globe Enucleation</h3>
-                <p className="text-sm text-slate-600 font-semibold leading-relaxed">
-                  The entire eyeball is retrieved for extraction of the cornea at the laboratory. After retrieval, a cosmetic prosthetic conformer is placed.
-                </p>
+
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 font-['Outfit']">
+                    Whole Globe Enucleation
+                  </h3>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mt-2">
+                    The intact eyeball is retrieved for sterile dissection in eye bank laboratory laminar flow hoods. A medical prosthetic conformer is placed to preserve natural appearance.
+                  </p>
+                </div>
+
+                {/* Clean Clinical Steps UI */}
+                <div className="space-y-3 pt-2">
+                  <p className="text-xs text-sky-700 font-black uppercase tracking-widest flex items-center gap-1.5">
+                    <Activity className="h-4 w-4 text-sky-600" /> Surgical Sequence:
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { step: "01", title: "Peritomy & Dissection", desc: "360° conjunctival peritomy and extraocular rectus muscle isolation." },
+                      { step: "02", title: "Optic Nerve Transection", desc: "Gentle nerve clamping and clean posterior surgical transection." },
+                      { step: "03", title: "Moist Chamber Transport", desc: "Eyeball placed in a sterile refrigerated moist container at 4°C." },
+                      { step: "04", title: "Conformer Placement", desc: "Medical prosthetic conformer placed behind eyelids for natural facial contour." }
+                    ].map((item, idx) => (
+                      <div key={idx} className="bg-white border border-sky-100 p-4 rounded-2xl shadow-xs hover:border-sky-300 transition-colors">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="bg-sky-100 text-sky-800 font-black text-[11px] px-2 py-0.5 rounded-lg">
+                            {item.step}
+                          </span>
+                          <h4 className="font-extrabold text-xs text-slate-900">{item.title}</h4>
+                        </div>
+                        <p className="text-[11px] font-medium text-slate-500 leading-relaxed">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              
-              {/* Formatted step-by-step layout using real clinical images from PPT */}
-              <div className="mt-8 space-y-4">
-                <p className="text-xs text-sky-700 font-extrabold uppercase tracking-widest">Surgical Sequence Steps (Real Images):</p>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { img: "image10_cropped_45.jpeg", label: "Step A: Prep" },
-                    { img: "image11_cropped.png", label: "Step B: Extraction" }
-                  ].map((step, idx) => (
-                    <div key={idx} className="bg-white p-2.5 rounded-2xl border border-sky-100 hover:border-sky-300 transition-all group/step relative shadow-xs">
-                      <img 
-                        src={`${BASE_PATH}/awareness/${step.img}`} 
-                        alt={`Enucleation step ${idx + 1}`} 
-                        className="w-full h-24 object-cover rounded-xl group-hover/step:scale-[1.03] transition-transform"
-                      />
-                      <span className="absolute top-4 left-4 bg-slate-900/90 text-[10px] font-black text-sky-400 px-2 py-0.5 rounded border border-white/10">
-                        {step.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+
+              <div className="mt-6 pt-4 border-t border-sky-100/70 flex items-center justify-between text-xs font-bold text-sky-800">
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-sky-600" /> Duration: 20–25 Minutes
+                </span>
+                <span className="bg-sky-50 border border-sky-200 px-2.5 py-1 rounded-xl text-[11px]">
+                  100% Cosmetic Integrity Restored
+                </span>
               </div>
             </motion.div>
 
