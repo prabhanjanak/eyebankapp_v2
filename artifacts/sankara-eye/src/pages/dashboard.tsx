@@ -147,10 +147,10 @@ function ManualEntryDialog({ open, onClose }: { open: boolean; onClose: () => vo
               <Users className="h-3.5 w-3.5" /> Referrer / Contact Person
             </h3>
             
-            {/* Myself vs Behalf Selection Toggle */}
+            {/* Present On-Site vs Representative Selection Toggle */}
             <div className="space-y-1.5">
-              <Label className="text-[11px] font-bold text-gray-700 uppercase tracking-wide block">I am entering details as: *</Label>
-              <div className="flex gap-2">
+              <Label className="text-[11px] font-bold text-gray-700 uppercase tracking-wide block">Reporter Status at Location: *</Label>
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -158,13 +158,13 @@ function ManualEntryDialog({ open, onClose }: { open: boolean; onClose: () => vo
                       form.setValue("referrerRelationship", "");
                     }
                   }}
-                  className={`px-3 py-1.5 text-xs font-bold uppercase rounded-lg border transition-all cursor-pointer ${
+                  className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
                     form.watch("referrerRelationship") !== "Myself (Self)"
-                      ? "bg-orange-600 text-white border-transparent"
+                      ? "bg-orange-600 text-white border-transparent shadow-sm"
                       : "bg-white text-gray-750 border-gray-200 hover:bg-gray-50"
                   }`}
                 >
-                  🙋‍♂️ I am at the death place myself
+                  <span>📍</span> Present at Location (Next of Kin / Family)
                 </button>
                 <button
                   type="button"
@@ -173,13 +173,13 @@ function ManualEntryDialog({ open, onClose }: { open: boolean; onClose: () => vo
                       form.setValue("referrerRelationship", "Myself (Self)");
                     }
                   }}
-                  className={`px-3 py-1.5 text-xs font-bold uppercase rounded-lg border transition-all cursor-pointer ${
+                  className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
                     form.watch("referrerRelationship") === "Myself (Self)"
-                      ? "bg-orange-600 text-white border-transparent"
+                      ? "bg-orange-600 text-white border-transparent shadow-sm"
                       : "bg-white text-gray-750 border-gray-200 hover:bg-gray-50"
                   }`}
                 >
-                  👥 I am entering on behalf of someone else (Third-Party)
+                  <span>👥</span> Reporting on Behalf of Family (Remote)
                 </button>
               </div>
               <p className="text-[9.5px] text-orange-700 font-bold uppercase mt-1">

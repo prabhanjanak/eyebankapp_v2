@@ -15,8 +15,9 @@ import { motion } from "framer-motion";
 import {
   Eye, Clock, Phone, Heart, ArrowRight, ShieldAlert, HeartHandshake,
   Award, CheckCircle2, Info, Users, AlertCircle, MapPin, Building2, User, Send,
-  Activity, Sparkles, Stethoscope, Syringe, Ambulance, Hospital, HeartPulse, Droplets, Microscope
+  Activity, Sparkles, Stethoscope, Syringe, Ambulance, Hospital, HeartPulse, Droplets, Microscope, Share2
 } from "lucide-react";
+import ShareReferModal from "@/components/ShareReferModal";
 
 // ─── Validation ──────────────────────────────────────────────────────────────
 const mobileRegex = /^\+91 [6-9]\d{9}$/;
@@ -261,6 +262,7 @@ export default function Home() {
           <img src={`${BASE_PATH}/logo.png`} alt="Sankara Eye Foundation" className="h-10 md:h-11 w-auto object-contain" />
         </a>
         <div className="flex items-center gap-2">
+          <ShareReferModal />
           <Link href="/awareness">
             <Button className="bg-gradient-to-r from-[#ff7a18] to-[#ff9f43] hover:from-[#ff8c32] hover:to-[#ffa751] text-white shadow-md rounded-xl text-xs font-black px-4 py-2 border-0 flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.03]">
               <Sparkles className="h-3.5 w-3.5 animate-pulse" /> Eye Donation Awareness
@@ -391,10 +393,10 @@ export default function Home() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-orange-50/40 p-5 md:p-6 rounded-2xl border border-orange-100/60 shadow-sm hover:shadow-md transition-shadow duration-300">
                       
-                      {/* Myself vs Behalf Selection Toggle */}
+                      {/* Present On-Site vs Representative Selection Toggle */}
                       <div className="space-y-3 md:col-span-2">
-                        <Label className="text-sm font-semibold text-gray-700 block">I am reporting this: *</Label>
-                        <div className="flex gap-2">
+                        <Label className="text-sm font-bold text-gray-800 block">Reporter Status at Location: *</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                           <button
                             type="button"
                             onClick={() => {
@@ -402,13 +404,19 @@ export default function Home() {
                                 emergencyForm.setValue("referrerRelationship", "", { shouldValidate: false });
                               }
                             }}
-                            className={`px-4 py-2.5 rounded-lg text-sm font-bold uppercase border transition-all duration-300 shadow-sm cursor-pointer ${
+                            className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-bold border transition-all duration-300 shadow-xs cursor-pointer text-left flex items-center gap-2.5 ${
                               emergencyForm.watch("referrerRelationship") !== "Myself (Self)"
                                 ? "bg-orange-500 border-orange-500 text-white shadow-md"
-                                : "bg-white border-gray-200 text-gray-700 hover:bg-orange-50"
+                                : "bg-white border-gray-200 text-gray-700 hover:bg-orange-50/60"
                             }`}
                           >
-                            🙋‍♂️ I am at the death place myself
+                            <span className="text-base">📍</span>
+                            <div>
+                              <p className="font-extrabold leading-tight">Present at Location</p>
+                              <p className={`text-[11px] font-medium mt-0.5 ${emergencyForm.watch("referrerRelationship") !== "Myself (Self)" ? "text-orange-100" : "text-gray-500"}`}>
+                                Direct family member or relative on-site
+                              </p>
+                            </div>
                           </button>
                           <button
                             type="button"
@@ -417,17 +425,23 @@ export default function Home() {
                                 emergencyForm.setValue("referrerRelationship", "Myself (Self)", { shouldValidate: true });
                               }
                             }}
-                            className={`px-4 py-2.5 rounded-lg text-sm font-bold uppercase border transition-all duration-300 shadow-sm cursor-pointer ${
+                            className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-bold border transition-all duration-300 shadow-xs cursor-pointer text-left flex items-center gap-2.5 ${
                               emergencyForm.watch("referrerRelationship") === "Myself (Self)"
                                 ? "bg-orange-500 border-orange-500 text-white shadow-md"
-                                : "bg-white border-gray-200 text-gray-700 hover:bg-orange-50"
+                                : "bg-white border-gray-200 text-gray-700 hover:bg-orange-50/60"
                             }`}
                           >
-                            👥 I am reporting on behalf of someone else (Third-Party)
+                            <span className="text-base">👥</span>
+                            <div>
+                              <p className="font-extrabold leading-tight">Reporting on Behalf of Family</p>
+                              <p className={`text-[11px] font-medium mt-0.5 ${emergencyForm.watch("referrerRelationship") === "Myself (Self)" ? "text-orange-100" : "text-gray-500"}`}>
+                                Remote reporter, physician, or friend
+                              </p>
+                            </div>
                           </button>
                         </div>
-                        <p className="text-[11px] text-orange-600 font-bold uppercase mt-1">
-                          ⚠️ Note: Please enter the contact details of the person who is present at the death place.
+                        <p className="text-[11px] text-orange-700 font-semibold mt-1 flex items-center gap-1 bg-orange-100/60 px-3 py-1.5 rounded-lg w-fit">
+                          <span>⚠️</span> Please ensure contact details match the person physically present with the deceased.
                         </p>
                       </div>
 

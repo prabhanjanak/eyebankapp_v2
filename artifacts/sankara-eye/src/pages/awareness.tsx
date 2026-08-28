@@ -5,8 +5,9 @@ import { BASE_PATH } from "@/lib/constants";
 import { motion, useScroll, useSpring } from "framer-motion";
 import {
   Eye, Clock, Heart, Award, ArrowLeft, ArrowRight, ShieldAlert,
-  CheckCircle2, AlertOctagon, Activity, FileText, Sparkles, BookOpen, Info, ShieldCheck, Microscope, Phone
+  CheckCircle2, AlertOctagon, Activity, FileText, Sparkles, BookOpen, Info, ShieldCheck, Microscope, Phone, Share2
 } from "lucide-react";
+import ShareReferModal from "@/components/ShareReferModal";
 
 // CountUp Component for statistics
 function CountUp({ to, duration = 2, suffix = "" }: { to: number; duration?: number; suffix?: string }) {
@@ -197,7 +198,8 @@ export default function Awareness() {
               <img src={`${BASE_PATH}/logo.png`} alt="Sankara Eye Foundation" className="h-10 md:h-12 w-auto object-contain" />
             </a>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ShareReferModal />
             <Link href="/">
               <Button variant="ghost" className="text-slate-655 hover:text-slate-900 hover:bg-slate-100 rounded-xl text-xs font-semibold gap-1.5 cursor-pointer">
                 <ArrowLeft className="h-3.5 w-3.5" /> Back to Home
@@ -441,20 +443,78 @@ export default function Awareness() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-7 flex justify-center w-full"
+              className="lg:col-span-7 w-full space-y-6"
             >
-              {/* Premium image container containing the real PPT causes image formatted nicely */}
-              <div className="bg-white p-4 rounded-3xl border border-orange-100 w-full max-w-2xl shadow-lg relative overflow-hidden group flex flex-col justify-center items-center">
-                <div className="absolute inset-0 bg-gradient-to-tr from-orange-50 to-transparent pointer-events-none" />
-                <img 
-                  src={`${BASE_PATH}/awareness/image2.jpeg`} 
-                  alt="Causes of Corneal Blindness Clinical Overview" 
-                  className="w-full h-auto max-h-[380px] object-contain rounded-2xl group-hover:scale-[1.01] transition-transform duration-500 shadow-xs" 
-                />
-                <div className="bg-orange-50 border border-orange-100 p-4 rounded-2xl shadow-sm text-center mt-4 w-full">
-                  <p className="text-xs font-black text-orange-850 uppercase tracking-widest mb-0.5">Clinical Pathology Presentation</p>
-                  <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                    Graphic clinical representation of corneal anomalies from the official patient education archives.
+              {/* Premium Clinical Pathology & Photographic Case Showcase */}
+              <div className="bg-white p-6 md:p-8 rounded-3xl border border-orange-100/80 shadow-xl relative overflow-hidden">
+                <div className="flex items-center justify-between border-b border-orange-100/60 pb-4 mb-6">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
+                      <h3 className="text-base md:text-lg font-black text-slate-900 font-['Outfit']">
+                        Clinical Pathology Archive
+                      </h3>
+                    </div>
+                    <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                      Actual clinical cases of severe corneal opacification and dystrophy
+                    </p>
+                  </div>
+                  <span className="hidden sm:inline-flex text-[10px] font-black uppercase tracking-widest bg-orange-100/70 text-orange-800 px-3 py-1 rounded-full border border-orange-200/50">
+                    Verified Medical Data
+                  </span>
+                </div>
+
+                {/* Grid of the 2 Real Clinical Eye Case Photos */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  <div className="group relative rounded-2xl overflow-hidden border border-orange-100 bg-slate-950/5 p-2 shadow-xs transition-all hover:border-orange-300">
+                    <div className="overflow-hidden rounded-xl bg-black aspect-[4/3] flex items-center justify-center">
+                      <img 
+                        src={`${BASE_PATH}/awareness/cornea_opacification_1.jpg`} 
+                        alt="Clinical Case 1 - Severe Microbial Keratitis & Corneal Opacity" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="pt-2 px-1 pb-1">
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                        <span>Case A: Corneal Ulceration</span>
+                        <span className="text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded-full font-black uppercase">Infectious</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 font-medium mt-1 leading-snug">
+                        Dense white scar tissue covering the optical axis, obstructing light transmission.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="group relative rounded-2xl overflow-hidden border border-orange-100 bg-slate-950/5 p-2 shadow-xs transition-all hover:border-orange-300">
+                    <div className="overflow-hidden rounded-xl bg-black aspect-[4/3] flex items-center justify-center">
+                      <img 
+                        src={`${BASE_PATH}/awareness/cornea_opacification_2.jpg`} 
+                        alt="Clinical Case 2 - Advanced Keratoconus & Corneal Dystrophy" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="pt-2 px-1 pb-1">
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                        <span>Case B: Keratoconus / Dystrophy</span>
+                        <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-black uppercase">Structural</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 font-medium mt-1 leading-snug">
+                        Severe corneal thinning with cone-like distortion and loss of optical clarity.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pathological Etiology Breakdown Cards */}
+                <div className="bg-gradient-to-r from-orange-50/80 via-amber-50/40 to-orange-50/80 border border-orange-100/70 p-4 rounded-2xl">
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <Microscope className="h-4 w-4 text-orange-600" />
+                    <h4 className="text-xs font-extrabold text-orange-950 uppercase tracking-wider">
+                      Transplantation Is The Curative Solution
+                    </h4>
+                  </div>
+                  <p className="text-xs font-semibold text-slate-650 leading-relaxed">
+                    In all these severe pathologies, standard corrective lenses or medication cannot restore vision. <strong className="text-slate-900 font-bold">Keratoplasty (Corneal Transplant)</strong> using healthy donor tissue is the only proven method to give sight back.
                   </p>
                 </div>
               </div>

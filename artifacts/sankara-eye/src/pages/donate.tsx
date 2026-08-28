@@ -14,6 +14,7 @@ import {
   CheckCircle2, Heart, Award, Download, Share2, ArrowLeft, ShieldAlert, Sparkles, MapPin, Building2, User, Mail, Loader2, Info, Activity, Clock, Phone
 } from "lucide-react";
 import { Link } from "wouter";
+import ShareReferModal from "@/components/ShareReferModal";
 
 const mobileRegex = /^\+91 [6-9]\d{9}$/;
 
@@ -461,6 +462,7 @@ export default function Donate() {
           <img src={`${BASE_PATH}/logo.png`} alt="Sankara Eye Foundation" className="h-10 md:h-12 object-contain cursor-pointer hover:scale-[1.01] transition-transform duration-300" />
         </a>
         <div className="flex items-center gap-3">
+          <ShareReferModal />
           <Link href="/awareness">
             <Button className="bg-gradient-to-r from-[#ff7a18] to-[#ff9f43] hover:from-[#ff8c32] hover:to-[#ffa751] text-white shadow-md rounded-xl text-xs font-black px-4 py-2 border-0 flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.03]">
               <Sparkles className="h-3.5 w-3.5 animate-pulse" /> Eye Donation Awareness
