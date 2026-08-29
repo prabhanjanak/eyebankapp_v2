@@ -9,6 +9,7 @@ import publicFormRouter from "./publicForm";
 import pledgesRouter from "./pledges";
 import settingsRouter from "./settings";
 import auditLogsRouter from "./auditLogs";
+import managementRouter from "./management";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(publicFormRouter);
 router.use(pledgesRouter);
 router.use(settingsRouter);
 router.use(auditLogsRouter);
+router.use(managementRouter);
 
 export default router;

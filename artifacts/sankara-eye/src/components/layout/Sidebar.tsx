@@ -14,6 +14,7 @@ import {
   Bell,
   HeartHandshake,
   ShieldAlert,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -28,15 +29,16 @@ export function Sidebar({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen?
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["super_admin", "eye_bank_head", "unit_coordinator"] },
-    { href: "/eye-calls", label: "Eye Calls", icon: PhoneCall, roles: ["super_admin", "eye_bank_head", "unit_coordinator"] },
-    { href: "/audit-logs", label: "Audit Logs", icon: ShieldAlert, roles: ["super_admin", "eye_bank_head", "unit_coordinator"] },
-    { href: "/pledges", label: "Pledges", icon: HeartHandshake, roles: ["super_admin"] },
-    { href: "/units", label: "Units", icon: Building2, roles: ["super_admin", "eye_bank_head"] },
+    { href: "/management", label: "Dean / Management", icon: BarChart3, roles: ["super_admin", "management", "eye_bank_head", "unit_coordinator"] },
+    { href: "/eye-calls", label: "Eye Calls", icon: PhoneCall, roles: ["super_admin", "management", "eye_bank_head", "unit_coordinator"] },
+    { href: "/audit-logs", label: "Audit Logs", icon: ShieldAlert, roles: ["super_admin", "management", "eye_bank_head", "unit_coordinator"] },
+    { href: "/pledges", label: "Pledges", icon: HeartHandshake, roles: ["super_admin", "management"] },
+    { href: "/units", label: "Units", icon: Building2, roles: ["super_admin", "management", "eye_bank_head"] },
     { href: "/users", label: "Users", icon: Users, roles: ["super_admin"] },
-    { href: "/notifications", label: "Notifications", icon: Bell, roles: ["super_admin", "eye_bank_head", "unit_coordinator"] },
+    { href: "/notifications", label: "Notifications", icon: Bell, roles: ["super_admin", "management", "eye_bank_head", "unit_coordinator"] },
     { href: "/settings/whatsapp", label: "WhatsApp API", icon: MessageCircle, roles: ["super_admin"] },
     { href: "/settings/email", label: "Email SMTP", icon: Mail, roles: ["super_admin"] },
-    { href: "/profile", label: "Profile", icon: UserCircle, roles: ["super_admin", "eye_bank_head", "unit_coordinator"] },
+    { href: "/profile", label: "Profile", icon: UserCircle, roles: ["super_admin", "management", "eye_bank_head", "unit_coordinator"] },
   ];
 
   const filteredNav = navItems.filter((item) => user && item.roles.includes(user.role));

@@ -20,6 +20,7 @@ import WhatsAppSettings from "./pages/whatsapp-settings";
 import EmailSettings from "./pages/email-settings";
 import Notifications from "./pages/notifications";
 import AuditLogs from "./pages/audit-logs";
+import ManagementDashboard from "./pages/management-dashboard";
 import { PledgesDashboard } from "./pages/pledges";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -733,6 +734,7 @@ function AuthProviderWithRoutes() {
             <Route path="/change-password" component={ForcedPasswordChangePage} />
             
             <Route path="/dashboard"><ProtectedRoute component={Dashboard} /></Route>
+            <Route path="/management"><ProtectedRoute component={ManagementDashboard} /></Route>
             <Route path="/eye-calls"><ProtectedRoute component={EyeCalls} /></Route>
             <Route path="/audit-logs"><ProtectedRoute component={AuditLogs} /></Route>
             <Route path="/units"><ProtectedRoute component={Units} /></Route>

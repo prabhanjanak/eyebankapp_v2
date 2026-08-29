@@ -190,6 +190,14 @@ async function ensureSuperAdmin() {
         clerkId: "local_auth_sivaprakash",
         mustChangePassword: false,
       },
+      {
+        email: "dean@sankaraeye.com",
+        name: "Dean / Executive Management",
+        role: "management",
+        password: "Dean@2026",
+        clerkId: "local_auth_dean",
+        mustChangePassword: false,
+      },
     ];
 
     for (const u of seedUsers) {
