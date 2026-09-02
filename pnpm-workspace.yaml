@@ -35,7 +35,9 @@ minimumReleaseAgeExclude:
   - stripe-replit-sync
 
 packages:
-  - artifacts/*
+  - artifacts/api-server
+  - artifacts/sankara-eye
+  - artifacts/sankara_coordinator_app
   - lib/*
   - lib/integrations/*
   - scripts
