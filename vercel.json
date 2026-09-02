@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "installCommand": "pnpm install --no-frozen-lockfile",
+  "installCommand": "mkdir -p artifacts/api-server/node_modules artifacts/sankara-eye/node_modules artifacts/sankara_coordinator_app/node_modules && pnpm install --no-frozen-lockfile",
   "buildCommand": "pnpm run build",
   "outputDirectory": "artifacts/sankara-eye/dist/public",
   "functions": {
