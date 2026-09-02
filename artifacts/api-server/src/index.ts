@@ -132,7 +132,7 @@ const DEFAULT_UNITS = [
   }
 ];
 
-async function ensureHospitalUnits() {
+export async function ensureHospitalUnits() {
   try {
     for (const unit of DEFAULT_UNITS) {
       const existing = await db
@@ -155,7 +155,7 @@ async function ensureHospitalUnits() {
   }
 }
 
-async function ensureSuperAdmin() {
+export async function ensureSuperAdmin() {
   try {
     const seedUsers = [
       {
