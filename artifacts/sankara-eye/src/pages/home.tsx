@@ -316,16 +316,155 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Helpline */}
-            <a href="tel:1919" className="flex items-center gap-4 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-2xl p-4 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group mb-4">
-              <div className="h-11 w-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0 group-hover:rotate-12 transition-transform">
-                <Phone className="h-6 w-6 animate-pulse" />
+            {/* ── INTERACTIVE SANKARA STATEWISE HELPLINE CONNECTOR ─────────────── */}
+            <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl border border-orange-200/80 shadow-[0_12px_40px_rgba(255,122,24,0.12)] rounded-[2rem] p-5 sm:p-7 text-left my-4 transition-all">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-[#ff7a18] to-[#ff9f43] text-white flex items-center justify-center shrink-0 shadow-md">
+                    <Phone className="h-5 w-5 animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-extrabold text-slate-900 leading-tight flex items-center gap-2">
+                      Connect to Sankara Eye Hospital
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                      Statewise Direct 24/7 Helpline &amp; Emergency Eye Bank Retrieval
+                    </p>
+                  </div>
+                </div>
+
+                {/* State Dropdown Selector */}
+                <div className="w-full sm:w-60 shrink-0">
+                  <Label className="text-[10px] font-black uppercase tracking-wider text-orange-600 mb-1 block">
+                    Select Your State for Helpline:
+                  </Label>
+                  <Select
+                    value={emergencyForm.watch("state")}
+                    onValueChange={(val) => {
+                      emergencyForm.setValue("state", val, { shouldValidate: true });
+                    }}
+                  >
+                    <SelectTrigger className="h-11 rounded-xl border-orange-200 bg-orange-50/60 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500/20 shadow-xs">
+                      <SelectValue placeholder="Choose Your State" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-64">
+                      {INDIA_STATES.map((s) => {
+                        const isSankaraState = SANKARA_STATES.some(st => st.toLowerCase() === s.name.toLowerCase());
+                        return (
+                          <SelectItem key={s.name} value={s.name} className="text-xs font-semibold">
+                            {s.name} {isSankaraState ? "🏥 (Sankara Hospital)" : ""}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="text-left">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/80">Eye Bank Helpline</p>
-                <p className="text-xl font-extrabold tracking-tight">Call Toll-Free: 1919</p>
-              </div>
-            </a>
+
+              {/* Dynamic Helpline Display based on Selected State */}
+              {emergencySelectedState && emergencyFilteredUnits.length > 0 && !isOutOfRegionState(emergencySelectedState) ? (
+                <div className="bg-gradient-to-r from-orange-50 via-amber-50/50 to-orange-50/30 border border-orange-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+                        <Building2 className="h-3 w-3" /> Sankara Eye Hospital Unit
+                      </span>
+                      <span className="text-xs font-bold text-orange-700">📍 {emergencySelectedState}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <p className="text-base sm:text-lg font-extrabold text-slate-900">
+                        {assignedUnit?.name || emergencyFilteredUnits[0]?.name}
+                      </p>
+                    </div>
+
+                    <p className="text-xs text-slate-600 font-medium line-clamp-1">
+                      {assignedUnit?.address || emergencyFilteredUnits[0]?.address}
+                    </p>
+
+                    {/* Branch switcher if state has multiple Sankara hospitals */}
+                    {emergencyFilteredUnits.length > 1 && (
+                      <div className="pt-2 flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-slate-500">Branch:</span>
+                        <select
+                          value={assignedUnit?.id || emergencyFilteredUnits[0]?.id}
+                          onChange={(e) => emergencyForm.setValue("unitId", Number(e.target.value), { shouldValidate: true })}
+                          className="text-xs font-bold text-slate-800 bg-white border border-gray-200 rounded-lg px-2 py-1 focus:ring-1 focus:ring-orange-500"
+                        >
+                          {emergencyFilteredUnits.map((u: any) => (
+                            <option key={u.id} value={u.id}>{u.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+                    <a
+                      href={`tel:${(assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+919000019190'}`}
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs sm:text-sm font-black px-5 py-3 rounded-xl shadow-md transition-all hover:scale-[1.03] active:scale-[0.98]"
+                    >
+                      <Phone className="h-4 w-4 animate-bounce" /> Call Hospital: {(assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+91 90000 19190'}
+                    </a>
+                    <a
+                      href={`https://wa.me/${((assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+919000019190').replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-md transition-all hover:scale-[1.03]"
+                      title="WhatsApp Emergency Helpline"
+                    >
+                      <Send className="h-4 w-4" /> WhatsApp
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                /* Non-Sankara State or Default National HQ Helpline */
+                <div className="bg-gradient-to-r from-amber-50 via-orange-50/60 to-yellow-50/40 border border-amber-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1 bg-amber-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+                        <ShieldAlert className="h-3 w-3" /> Sankara Central National HQ Helpline
+                      </span>
+                      {emergencySelectedState && (
+                        <span className="text-xs font-bold text-amber-800">
+                          📍 {emergencySelectedState} (Routed to Central HQ)
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-base sm:text-lg font-extrabold text-slate-900">
+                      Sankara National Eye Bank Mission HQ
+                    </p>
+
+                    <p className="text-xs text-slate-600 font-medium">
+                      {emergencySelectedState
+                        ? `For ${emergencySelectedState}, our Central HQ team will coordinate local retrieval.`
+                        : "Select your state to connect directly with your nearest Sankara Eye Hospital branch."}
+                    </p>
+
+                    <p className="text-[11px] text-slate-500 font-semibold flex items-center gap-1 pt-1">
+                      <span>ℹ️</span> Govt National Helpline <strong className="text-slate-700">1919</strong> is also available as secondary option.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+                    <a
+                      href="tel:+919000019190"
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white text-xs sm:text-sm font-black px-5 py-3 rounded-xl shadow-md transition-all hover:scale-[1.03]"
+                    >
+                      <Phone className="h-4 w-4 animate-bounce" /> Call HQ: +91 90000 19190
+                    </a>
+                    <a
+                      href="tel:1919"
+                      className="inline-flex items-center justify-center gap-1 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold px-3 py-3 rounded-xl border border-slate-200 transition-colors"
+                      title="Govt Helpline 1919"
+                    >
+                      Govt 1919
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* WIDE EMERGENCY FORM OR SUCCESS VIEW */}
             {isSubmitted && submittedUnit ? (
