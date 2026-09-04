@@ -314,12 +314,11 @@ export default function Awareness() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto">
             {[
-              { to: 90, suffix: "%", title: "Developing World", desc: "Of visually impaired people reside in developing countries." },
-              { to: 80, suffix: "%", title: "Treatable Cases", desc: "Of all global blindness can be prevented or treated." },
-              { to: 12, suffix: " Lakhs+", title: "Corneal Blindness", desc: "People in India live with bilateral corneal blindness." },
-              { to: 25000, suffix: "+", title: "New Cases Yearly", desc: "New cases of corneal blindness arise annually in India." }
+              { to: 80, suffix: "%", title: "Treatable Cases", desc: "Of all blindness can be prevented or cured with proper care." },
+              { to: 12, suffix: " Lakhs+", title: "Waiting in India", desc: "People in India are living with corneal blindness waiting for sight." },
+              { to: 25000, suffix: "+", title: "New Cases Yearly", desc: "New cases of corneal blindness arise yearly in India." }
             ].map((stat, idx) => (
               <motion.div 
                 key={idx}
@@ -327,13 +326,13 @@ export default function Awareness() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="bg-[#FCFBF9] border border-orange-100/50 rounded-3xl p-8 hover:border-orange-500/20 hover:bg-orange-50/20 transition-all duration-300 relative group shadow-sm hover:shadow-md"
+                className="bg-[#FCFBF9] border border-orange-100/50 rounded-3xl p-8 hover:border-orange-500/20 hover:bg-orange-50/20 transition-all duration-300 relative group shadow-sm hover:shadow-md text-center"
               >
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-t-3xl scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
                 <h3 className="text-4xl md:text-5xl font-black text-slate-900 font-['Outfit'] mb-2 tracking-tight">
                   <CountUp to={stat.to} suffix={stat.suffix} />
                 </h3>
-                <h4 className="font-extrabold text-orange-655 text-sm uppercase tracking-wider mb-2">{stat.title}</h4>
+                <h4 className="font-extrabold text-orange-600 text-xs sm:text-sm uppercase tracking-wider mb-2">{stat.title}</h4>
                 <p className="text-slate-500 text-xs font-semibold leading-relaxed">{stat.desc}</p>
               </motion.div>
             ))}
@@ -350,20 +349,20 @@ export default function Awareness() {
             >
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-700 border border-orange-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                  <Activity className="h-4 w-4" /> Global Scenario
+                  <Activity className="h-4 w-4" /> Understanding Eye Donation
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 font-['Outfit']">Preventable Shadows</h3>
-                <p className="text-slate-655 font-semibold text-sm leading-relaxed">
-                  Blindness is not just a health issue; it limits livelihoods. WHO estimates that <strong>80% of blindness is preventable or curable</strong>. Corneal blindness is one of the most treatable forms through transplants.
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 font-['Outfit']">What is Corneal Blindness?</h3>
+                <p className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
+                  The cornea is the clear front window of the eye. When it gets damaged or cloudy due to injury or illness, light cannot enter. Replacing this damaged window with a healthy donated cornea restores sight completely.
                 </p>
                 <ul className="space-y-3.5 text-slate-600 font-semibold text-xs md:text-sm">
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4.5 w-4.5 text-orange-600 shrink-0 mt-0.5" />
-                    <span>Corneal blindness constitutes 5% of all blindness cases globally.</span>
+                    <span>Corneal transplant surgery is highly successful and safe.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4.5 w-4.5 text-orange-600 shrink-0 mt-0.5" />
-                    <span>Eye transplantation is highly successful, restoring sight almost immediately.</span>
+                    <span>Eye donation is completely free and given purely to restore vision.</span>
                   </li>
                 </ul>
               </div>
@@ -379,20 +378,20 @@ export default function Awareness() {
             >
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-700 border border-orange-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                  <BookOpen className="h-4 w-4" /> National Burden
+                  <BookOpen className="h-4 w-4" /> Hope for Families
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 font-['Outfit']">Restoring India's Sight</h3>
-                <p className="text-slate-655 font-semibold text-sm leading-relaxed">
-                  Over <strong>10 million citizens</strong> in India suffer from corneal blindness or related unilateral impairment. Annually, 20,000–25,000 new cases are diagnosed, mostly affecting young adults and children.
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 font-['Outfit']">Bringing Light Back Home</h3>
+                <p className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
+                  Over <strong>12 lakh people</strong> in India are living with corneal blindness. Every year, 25,000 new cases arise, mostly affecting young children and breadwinners.
                 </p>
                 <ul className="space-y-3.5 text-slate-600 font-semibold text-xs md:text-sm">
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4.5 w-4.5 text-orange-600 shrink-0 mt-0.5" />
-                    <span>Corneal scarring represents 8% of all blindness in adults over 50.</span>
+                    <span>One eye donation can give sight back to two or more blind individuals.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4.5 w-4.5 text-orange-600 shrink-0 mt-0.5" />
-                    <span>Pledging is an act of patriotism and humanity that brings light back home.</span>
+                    <span>Pledging your eyes is a noble, loving gift that changes lives forever.</span>
                   </li>
                 </ul>
               </div>
@@ -425,10 +424,10 @@ export default function Awareness() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  { title: "Keratoconus", desc: "A progressive thinning that bulges the cornea into a cone." },
-                  { title: "Infections", desc: "Corneal ulcers caused by bacteria, fungi, or viruses." },
-                  { title: "Genetic Diseases", desc: "Inherited disorders causing corneal cloudiness." },
-                  { title: "Eye Trauma", desc: "Accidents, burns, or physical injuries to the eye surface." }
+                  { title: "Eye Injury", desc: "Accidents or scratches that scar the front of the eye." },
+                  { title: "Infections", desc: "Untreated eye infections causing cloudy white spots." },
+                  { title: "Corneal Weakness", desc: "Natural thinning or shape changes in the eye layer." },
+                  { title: "Eye Burns & Trauma", desc: "Chemical or thermal burns damaging optical clarity." }
                 ].map((item, idx) => (
                   <div key={idx} className="bg-white border border-orange-100/55 p-5 rounded-2xl hover:border-orange-400 transition-all shadow-sm group">
                     <h4 className="font-extrabold text-slate-900 text-sm group-hover:text-orange-600 transition-colors">{item.title}</h4>
@@ -445,22 +444,22 @@ export default function Awareness() {
               transition={{ duration: 0.8 }}
               className="lg:col-span-7 w-full space-y-6"
             >
-              {/* Premium Clinical Pathology & Photographic Case Showcase */}
+              {/* Premium Clinical Showcase */}
               <div className="bg-white p-6 md:p-8 rounded-3xl border border-orange-100/80 shadow-xl relative overflow-hidden">
                 <div className="flex items-center justify-between border-b border-orange-100/60 pb-4 mb-6">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
+                      <span className="h-2 w-2 rounded-full bg-orange-500 animate-ping" />
                       <h3 className="text-base md:text-lg font-black text-slate-900 font-['Outfit']">
-                        Clinical Pathology Archive
+                        Visualizing Corneal Damage
                       </h3>
                     </div>
                     <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                      Actual clinical cases of severe corneal opacification and dystrophy
+                      Examples of how injury or illness clouds the clear front layer of the eye
                     </p>
                   </div>
                   <span className="hidden sm:inline-flex text-[10px] font-black uppercase tracking-widest bg-orange-100/70 text-orange-800 px-3 py-1 rounded-full border border-orange-200/50">
-                    Verified Medical Data
+                    Medical Awareness
                   </span>
                 </div>
 
@@ -470,17 +469,17 @@ export default function Awareness() {
                     <div className="overflow-hidden rounded-xl bg-black aspect-[4/3] flex items-center justify-center">
                       <img 
                         src={`${BASE_PATH}/awareness/cornea_opacification_1.jpg`} 
-                        alt="Clinical Case 1 - Severe Microbial Keratitis & Corneal Opacity" 
+                        alt="Clinical Case 1 - Eye Scarring" 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <div className="pt-2 px-1 pb-1">
                       <div className="flex items-center justify-between text-xs font-bold text-slate-800">
-                        <span>Case A: Corneal Ulceration</span>
-                        <span className="text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded-full font-black uppercase">Infectious</span>
+                        <span>Cloudy Eye Scarring</span>
+                        <span className="text-[10px] text-orange-700 bg-orange-50 px-2 py-0.5 rounded-full font-black uppercase">Scar Tissue</span>
                       </div>
                       <p className="text-[11px] text-slate-500 font-medium mt-1 leading-snug">
-                        Dense white scar tissue covering the optical axis, obstructing light transmission.
+                        White scar tissue covering the eye, blocking light from entering.
                       </p>
                     </div>
                   </div>
@@ -489,32 +488,31 @@ export default function Awareness() {
                     <div className="overflow-hidden rounded-xl bg-black aspect-[4/3] flex items-center justify-center">
                       <img 
                         src={`${BASE_PATH}/awareness/cornea_opacification_2.jpg`} 
-                        alt="Clinical Case 2 - Advanced Keratoconus & Corneal Dystrophy" 
+                        alt="Clinical Case 2 - Corneal Distortion" 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <div className="pt-2 px-1 pb-1">
                       <div className="flex items-center justify-between text-xs font-bold text-slate-800">
-                        <span>Case B: Keratoconus / Dystrophy</span>
+                        <span>Corneal Distortion</span>
                         <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-black uppercase">Structural</span>
                       </div>
                       <p className="text-[11px] text-slate-500 font-medium mt-1 leading-snug">
-                        Severe corneal thinning with cone-like distortion and loss of optical clarity.
+                        Irregular shape and cloudiness that prevents sharp, clear vision.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Pathological Etiology Breakdown Cards */}
                 <div className="bg-gradient-to-r from-orange-50/80 via-amber-50/40 to-orange-50/80 border border-orange-100/70 p-4 rounded-2xl">
                   <div className="flex items-center gap-2 mb-2.5">
                     <Microscope className="h-4 w-4 text-orange-600" />
                     <h4 className="text-xs font-extrabold text-orange-950 uppercase tracking-wider">
-                      Transplantation Is The Curative Solution
+                      Eye Donation Restores Sight Completely
                     </h4>
                   </div>
-                  <p className="text-xs font-semibold text-slate-650 leading-relaxed">
-                    In all these severe pathologies, standard corrective lenses or medication cannot restore vision. <strong className="text-slate-900 font-bold">Keratoplasty (Corneal Transplant)</strong> using healthy donor tissue is the only proven method to give sight back.
+                  <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                    In these cases, glasses or medicines cannot clear the scar. <strong className="text-slate-900 font-bold">Corneal Transplantation</strong> using a healthy donated cornea is the only way to give sight back.
                   </p>
                 </div>
               </div>
