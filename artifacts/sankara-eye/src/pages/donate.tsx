@@ -393,7 +393,7 @@ export default function Donate() {
                   className="font-black tracking-wide"
                   style={{ background: "linear-gradient(90deg, #b8860b 0%, #f5c842 40%, #d4af37 70%, #a0720a 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
                 >GIFT OF VISION</span>{" "}
-                upon two blind individuals — a gift that transcends life itself.
+                upon two or more blind individuals — a gift that transcends life itself.
               </p>
 
               <p className="text-[11px] text-gray-400 italic font-semibold">
@@ -490,7 +490,7 @@ export default function Donate() {
           "Do not Bury, Do not Burn, Donate Eyes"
         </p>
         <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed font-semibold">
-          Every eye donation restores sight to two blind individuals. Declare your decision by registering your pledge below.
+          Every eye donation restores sight to two or more blind individuals. Declare your decision by registering your pledge below.
         </p>
       </div>
 
@@ -728,7 +728,7 @@ export default function Donate() {
                 <h4 className="font-extrabold text-gray-900 text-[15px]">Illuminate Two Lives</h4>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed font-semibold">
-                Corneal blindness causes severe suffering, but it is curable through transplantation. Your noble decision restores the miracle of sight to <span className="font-bold text-gray-950">not one, but two blind individuals</span> plunged into darkness. Do not deny them life—let your eyes live even after you.
+                Corneal blindness causes severe suffering, but it is curable through transplantation. Your noble decision restores the miracle of sight to <span className="font-bold text-gray-950">not one, but two or more blind individuals</span> plunged into darkness. Do not deny them life—let your eyes live even after you.
               </p>
             </div>
 

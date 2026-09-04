@@ -238,7 +238,7 @@ export default function Awareness() {
                 </span>
               </h1>
               <p className="text-lg md:text-xl text-slate-600 font-semibold leading-relaxed max-w-xl">
-                By donating your eyes, you leave a legacy that outlasts time—letting your final act of kindness restore vision to two blind individuals.
+                By donating your eyes, you leave a legacy that outlasts time—letting your final act of kindness restore vision to two or more blind individuals.
               </p>
             </div>
 

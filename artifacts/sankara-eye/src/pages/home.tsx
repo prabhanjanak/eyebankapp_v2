@@ -312,7 +312,7 @@ export default function Home() {
                 "Do not Bury, Do not Burn, Donate Eyes"
               </p>
               <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto font-medium">
-                Every eye donation restores sight to two blind individuals. Eye retrieval must happen within <strong className="text-red-600">6 hours of death</strong>.
+                Every eye donation restores sight to two or more blind individuals. Eye retrieval must happen within <strong className="text-red-600">6 hours of demise</strong>.
               </p>
             </div>
 
@@ -534,8 +534,9 @@ export default function Home() {
                   </div>
                   <div>
                     <h2 className="text-3xl font-extrabold text-gray-900 leading-tight">Eye Donation Request</h2>
-                    <p className="text-sm text-gray-500 font-bold mt-2 max-w-lg mx-auto">
-                      We are deeply sorry for your loss. Please provide a few details so our medical retrieval team can assist you immediately.
+                    <p className="text-sm sm:text-base text-gray-600 font-bold mt-2 max-w-xl mx-auto leading-relaxed">
+                      We share your grief, We feel sorry for your loss<br />
+                      Please provide few details so our medical retrieval team can assist you immediately.
                     </p>
                   </div>
                 </div>
@@ -605,7 +606,7 @@ export default function Home() {
                         <Label className="text-sm font-semibold text-gray-700">
                           {emergencyForm.watch("referrerRelationship") === "Myself (Self)" 
                             ? "Your Full Name *" 
-                            : "Contact Person Name (at Death Place) *"}
+                            : "Contact Person Name (at the death place) *"}
                         </Label>
                         <div className="relative group/field">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/field:text-orange-500 transition-colors">
@@ -638,7 +639,7 @@ export default function Home() {
                           </div>
                         ) : (
                           <div className="flex flex-wrap gap-2 mt-1">
-                            {["Son", "Daughter", "Spouse / Partner", "Sibling", "Grandchild", "Friend / Relative", "Hospital Staff", "Other"].map(rel => {
+                            {["Son", "Daughter", "Spouse / Partner", "Sibling", "Grandchild", "Friend / Relative", "Hospital Staff", "Others"].map(rel => {
                               const isSelected = emergencyForm.watch("referrerRelationship") === rel;
                               return (
                                 <button
@@ -711,7 +712,7 @@ export default function Home() {
                       </div>
 
                       <div className="space-y-3 md:col-span-2">
-                        <Label className="text-sm font-semibold text-gray-700">Approximate Time of Passing *</Label>
+                        <Label className="text-sm font-semibold text-gray-700">Demise Time *</Label>
                         <div className="relative group/field">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/field:text-orange-500 transition-colors">
                             <Clock className="h-5 w-5" />
@@ -722,7 +723,7 @@ export default function Home() {
                       </div>
 
                       <div className="space-y-3 md:col-span-2">
-                        <Label className="text-sm font-semibold text-gray-700">Cause of Passing *</Label>
+                        <Label className="text-sm font-semibold text-gray-700">Cause of Demise *</Label>
                         <div className="relative group/field">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 z-10 group-focus-within/field:text-orange-500 transition-colors">
                             <Microscope className="h-5 w-5" />
@@ -737,6 +738,8 @@ export default function Home() {
                               <SelectItem value="Cardiac Arrest / Heart Attack" className="text-base py-2">Cardiac Arrest / Heart Attack</SelectItem>
                               <SelectItem value="Accident / Trauma" className="text-base py-2">Accident / Trauma</SelectItem>
                               <SelectItem value="Prolonged Illness" className="text-base py-2">Prolonged Illness</SelectItem>
+                              <SelectItem value="Jaundice" className="text-base py-2">Jaundice</SelectItem>
+                              <SelectItem value="Septisemia" className="text-base py-2">Septisemia</SelectItem>
                               <SelectItem value="I don't know / Other" className="text-base py-2 font-semibold text-orange-600">I don't know / Other</SelectItem>
                             </SelectContent>
                           </Select>
@@ -981,7 +984,7 @@ export default function Home() {
               },
               {
                 icon: <Eye size={22} className="text-purple-600" />, bg: "bg-purple-50", border: "border-purple-100", color: "from-purple-500 to-purple-400",
-                title: "Illuminate Two Lives", desc: "One donation gives sight to TWO blind individuals through corneal transplantation."
+                title: "Illuminate Lives", desc: "One donation gives sight to two or more blind individuals through corneal transplantation."
               },
             ].map((item, i) => (
               <motion.div 
