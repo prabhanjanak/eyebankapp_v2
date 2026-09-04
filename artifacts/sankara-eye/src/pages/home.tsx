@@ -41,16 +41,30 @@ const emergencySchema = z.object({
 type EmergencyValues = z.infer<typeof emergencySchema>;
 
 const SANKARA_STATES = [
-  "Uttar Pradesh",
   "Tamil Nadu",
-  "Andhra Pradesh",
-  "Gujarat",
   "Karnataka",
+  "Andhra Pradesh",
   "Telangana",
+  "Uttar Pradesh",
+  "Gujarat",
   "Madhya Pradesh",
   "Maharashtra",
   "Punjab",
   "Rajasthan"
+];
+
+const DISPLAY_STATES = [
+  "Tamil Nadu",
+  "Karnataka",
+  "Andhra Pradesh",
+  "Telangana",
+  "Uttar Pradesh",
+  "Gujarat",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Punjab",
+  "Rajasthan",
+  "Others"
 ];
 
 const isOutOfRegionState = (stateName: string) => {
@@ -121,6 +135,24 @@ export default function Home() {
 
   const emergencySelectedState = emergencyForm.watch("state");
   const emergencySelectedDistrict = emergencyForm.watch("district");
+
+  const handleStateSelect = (val: string) => {
+    emergencyForm.setValue("state", val, { shouldValidate: true });
+    emergencyForm.setValue("district", "", { shouldValidate: false });
+    emergencyForm.setValue("unitId", 0, { shouldValidate: false });
+
+    // Auto-update Address box when state is selected
+    const currentAddress = emergencyForm.getValues("address") || "";
+    if (val && val !== "Others") {
+      if (!currentAddress.trim()) {
+        emergencyForm.setValue("address", val, { shouldValidate: false });
+      } else if (DISPLAY_STATES.includes(currentAddress.trim())) {
+        emergencyForm.setValue("address", val, { shouldValidate: false });
+      } else if (!currentAddress.toLowerCase().includes(val.toLowerCase())) {
+        emergencyForm.setValue("address", `${currentAddress.trim()}, ${val}`, { shouldValidate: false });
+      }
+    }
+  };
 
   const emergencyDistricts = useMemo(() => {
     const stateObj = INDIA_STATES.find(
@@ -342,7 +374,7 @@ export default function Home() {
                     <Select
                       value={emergencyForm.watch("state")}
                       onValueChange={(val) => {
-                        emergencyForm.setValue("state", val, { shouldValidate: true });
+                        handleStateSelect(val);
                       }}
                     >
                       <SelectTrigger className="h-11 rounded-xl border-orange-300/80 bg-orange-50/80 hover:bg-orange-100/50 text-xs sm:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-orange-500/20 shadow-xs transition-colors">
@@ -352,15 +384,19 @@ export default function Home() {
                         </div>
                       </SelectTrigger>
                       <SelectContent className="max-h-64 rounded-xl">
-                        {INDIA_STATES.map((s) => {
-                          const isSankaraState = SANKARA_STATES.some(st => st.toLowerCase() === s.name.toLowerCase());
+                        {DISPLAY_STATES.map((sName) => {
+                          const isOthers = sName === "Others";
                           return (
-                            <SelectItem key={s.name} value={s.name} className="text-xs font-semibold py-2">
+                            <SelectItem key={sName} value={sName} className="text-xs font-semibold py-2">
                               <span className="flex items-center justify-between w-full gap-2">
-                                <span>{s.name}</span>
-                                {isSankaraState && (
+                                <span>{sName}</span>
+                                {!isOthers ? (
                                   <span className="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full border border-orange-200/60">
                                     Sankara Branch
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-200/60">
+                                    Mission HQ Route
                                   </span>
                                 )}
                               </span>
@@ -787,9 +823,7 @@ export default function Home() {
                           </div>
                           <Select
                             onValueChange={(val) => {
-                              emergencyForm.setValue("state", val, { shouldValidate: true });
-                              emergencyForm.setValue("district", "", { shouldValidate: false });
-                              emergencyForm.setValue("unitId", 0, { shouldValidate: false });
+                              handleStateSelect(val);
                             }}
                             value={emergencyForm.watch("state")}
                           >
@@ -797,7 +831,9 @@ export default function Home() {
                               <SelectValue placeholder="Select State" />
                             </SelectTrigger>
                             <SelectContent className="bg-white border-gray-150 max-h-60">
-                              {INDIA_STATES.map(s => <SelectItem key={s.name} value={s.name} className="text-base py-2">{s.name}</SelectItem>)}
+                              {DISPLAY_STATES.map(sName => (
+                                <SelectItem key={sName} value={sName} className="text-base py-2 font-medium">{sName}</SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </div>
