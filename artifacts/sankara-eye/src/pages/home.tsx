@@ -317,79 +317,92 @@ export default function Home() {
             </div>
 
             {/* ── INTERACTIVE SANKARA STATEWISE HELPLINE CONNECTOR ─────────────── */}
-            <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl border border-orange-200/80 shadow-[0_12px_40px_rgba(255,122,24,0.12)] rounded-[2rem] p-5 sm:p-7 text-left my-4 transition-all">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-[#ff7a18] to-[#ff9f43] text-white flex items-center justify-center shrink-0 shadow-md">
-                    <Phone className="h-5 w-5 animate-pulse" />
+            <div className="w-full max-w-4xl bg-white/95 backdrop-blur-xl border border-orange-200/90 shadow-[0_12px_45px_rgba(255,122,24,0.1)] rounded-3xl p-6 sm:p-8 text-left my-6 transition-all duration-300">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-orange-100/80 pb-5 mb-5">
+                <div className="flex items-center gap-3.5">
+                  <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#ff7a18] to-[#ff9f43] text-white flex items-center justify-center shrink-0 shadow-md shadow-orange-500/20">
+                    <Phone className="h-6 w-6 animate-pulse" />
                   </div>
                   <div>
-                    <h3 className="text-base sm:text-lg font-extrabold text-slate-900 leading-tight flex items-center gap-2">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-tight">
                       Connect to Sankara Eye Hospital
                     </h3>
-                    <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                      Statewise Direct 24/7 Helpline &amp; Emergency Eye Bank Retrieval
+                    <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-0.5">
+                      Statewise Direct 24/7 Helpline &amp; Emergency Eye Retrieval
                     </p>
                   </div>
                 </div>
 
                 {/* State Dropdown Selector */}
-                <div className="w-full sm:w-60 shrink-0">
-                  <Label className="text-[10px] font-black uppercase tracking-wider text-orange-600 mb-1 block">
-                    Select Your State for Helpline:
-                  </Label>
-                  <Select
-                    value={emergencyForm.watch("state")}
-                    onValueChange={(val) => {
-                      emergencyForm.setValue("state", val, { shouldValidate: true });
-                    }}
-                  >
-                    <SelectTrigger className="h-11 rounded-xl border-orange-200 bg-orange-50/60 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500/20 shadow-xs">
-                      <SelectValue placeholder="Choose Your State" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-64">
-                      {INDIA_STATES.map((s) => {
-                        const isSankaraState = SANKARA_STATES.some(st => st.toLowerCase() === s.name.toLowerCase());
-                        return (
-                          <SelectItem key={s.name} value={s.name} className="text-xs font-semibold">
-                            {s.name} {isSankaraState ? "🏥 (Sankara Hospital)" : ""}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
+                <div className="w-full md:w-72 shrink-0">
+                  <div className="relative">
+                    <Label className="text-[10px] font-black uppercase tracking-wider text-orange-600 mb-1.5 block">
+                      Select Your State for Direct Helpline:
+                    </Label>
+                    <Select
+                      value={emergencyForm.watch("state")}
+                      onValueChange={(val) => {
+                        emergencyForm.setValue("state", val, { shouldValidate: true });
+                      }}
+                    >
+                      <SelectTrigger className="h-11 rounded-xl border-orange-300/80 bg-orange-50/80 hover:bg-orange-100/50 text-xs sm:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-orange-500/20 shadow-xs transition-colors">
+                        <div className="flex items-center gap-2 truncate">
+                          <MapPin className="h-4 w-4 text-orange-600 shrink-0" />
+                          <SelectValue placeholder="Choose Your State" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-64 rounded-xl">
+                        {INDIA_STATES.map((s) => {
+                          const isSankaraState = SANKARA_STATES.some(st => st.toLowerCase() === s.name.toLowerCase());
+                          return (
+                            <SelectItem key={s.name} value={s.name} className="text-xs font-semibold py-2">
+                              <span className="flex items-center justify-between w-full gap-2">
+                                <span>{s.name}</span>
+                                {isSankaraState && (
+                                  <span className="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full border border-orange-200/60">
+                                    Sankara Branch
+                                  </span>
+                                )}
+                              </span>
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
               {/* Dynamic Helpline Display based on Selected State */}
               {emergencySelectedState && emergencyFilteredUnits.length > 0 && !isOutOfRegionState(emergencySelectedState) ? (
-                <div className="bg-gradient-to-r from-orange-50 via-amber-50/50 to-orange-50/30 border border-orange-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="space-y-1.5 flex-1">
+                <div className="bg-gradient-to-br from-orange-50/90 via-amber-50/40 to-orange-50/20 border border-orange-200/90 rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                  <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="inline-flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
-                        <Building2 className="h-3 w-3" /> Sankara Eye Hospital Unit
+                      <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+                        <Building2 className="h-3.5 w-3.5" /> Sankara Eye Hospital Branch
                       </span>
-                      <span className="text-xs font-bold text-orange-700">📍 {emergencySelectedState}</span>
+                      <span className="text-xs font-bold text-orange-800 bg-orange-100/80 px-2.5 py-1 rounded-full border border-orange-200/60">
+                        📍 {emergencySelectedState}
+                      </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <p className="text-base sm:text-lg font-extrabold text-slate-900">
+                    <div>
+                      <h4 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
                         {assignedUnit?.name || emergencyFilteredUnits[0]?.name}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1 leading-relaxed">
+                        {assignedUnit?.address || emergencyFilteredUnits[0]?.address}
                       </p>
                     </div>
 
-                    <p className="text-xs text-slate-600 font-medium line-clamp-1">
-                      {assignedUnit?.address || emergencyFilteredUnits[0]?.address}
-                    </p>
-
                     {/* Branch switcher if state has multiple Sankara hospitals */}
                     {emergencyFilteredUnits.length > 1 && (
-                      <div className="pt-2 flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-slate-500">Branch:</span>
+                      <div className="pt-1.5 flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-500 shrink-0">Branch:</span>
                         <select
                           value={assignedUnit?.id || emergencyFilteredUnits[0]?.id}
                           onChange={(e) => emergencyForm.setValue("unitId", Number(e.target.value), { shouldValidate: true })}
-                          className="text-xs font-bold text-slate-800 bg-white border border-gray-200 rounded-lg px-2 py-1 focus:ring-1 focus:ring-orange-500"
+                          className="text-xs font-bold text-slate-800 bg-white border border-orange-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-xs cursor-pointer"
                         >
                           {emergencyFilteredUnits.map((u: any) => (
                             <option key={u.id} value={u.id}>{u.name}</option>
@@ -399,67 +412,72 @@ export default function Home() {
                     )}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+                  <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-stretch gap-2.5 w-full md:w-auto shrink-0">
                     <a
                       href={`tel:${(assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+919000019190'}`}
-                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs sm:text-sm font-black px-5 py-3 rounded-xl shadow-md transition-all hover:scale-[1.03] active:scale-[0.98]"
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs sm:text-sm font-extrabold px-5 py-3.5 rounded-xl shadow-md shadow-red-600/20 transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
                     >
-                      <Phone className="h-4 w-4 animate-bounce" /> Call Hospital: {(assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+91 90000 19190'}
+                      <Phone className="h-4 w-4 animate-bounce" />
+                      <span>Call: {(assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+91 90000 19190'}</span>
                     </a>
                     <a
                       href={`https://wa.me/${((assignedUnit as any)?.coordinatorWhatsapp || (emergencyFilteredUnits[0] as any)?.coordinatorWhatsapp || '+919000019190').replace(/\D/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-md transition-all hover:scale-[1.03]"
+                      className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold px-4 py-3.5 rounded-xl shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02] whitespace-nowrap"
                       title="WhatsApp Emergency Helpline"
                     >
-                      <Send className="h-4 w-4" /> WhatsApp
+                      <Send className="h-4 w-4" />
+                      <span>WhatsApp</span>
                     </a>
                   </div>
                 </div>
               ) : (
                 /* Non-Sankara State or Default National HQ Helpline */
-                <div className="bg-gradient-to-r from-amber-50 via-orange-50/60 to-yellow-50/40 border border-amber-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="space-y-1.5 flex-1">
+                <div className="bg-gradient-to-br from-amber-50/90 via-orange-50/40 to-yellow-50/20 border border-amber-200/90 rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                  <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="inline-flex items-center gap-1 bg-amber-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
-                        <ShieldAlert className="h-3 w-3" /> Sankara Central National HQ Helpline
+                      <span className="inline-flex items-center gap-1.5 bg-amber-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+                        <ShieldAlert className="h-3.5 w-3.5" /> Sankara Central National HQ Helpline
                       </span>
                       {emergencySelectedState && (
-                        <span className="text-xs font-bold text-amber-800">
-                          📍 {emergencySelectedState} (Routed to Central HQ)
+                        <span className="text-xs font-bold text-amber-800 bg-amber-100/80 px-2.5 py-1 rounded-full border border-amber-200/60">
+                          📍 {emergencySelectedState} (Central HQ Route)
                         </span>
                       )}
                     </div>
 
-                    <p className="text-base sm:text-lg font-extrabold text-slate-900">
-                      Sankara National Eye Bank Mission HQ
-                    </p>
+                    <div>
+                      <h4 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                        Sankara National Eye Bank Mission HQ
+                      </h4>
+                      <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1 leading-relaxed">
+                        {emergencySelectedState
+                          ? `For ${emergencySelectedState}, our Central HQ team will coordinate immediate local retrieval.`
+                          : "Select your state above to connect directly with your nearest Sankara Eye Hospital branch."}
+                      </p>
+                    </div>
 
-                    <p className="text-xs text-slate-600 font-medium">
-                      {emergencySelectedState
-                        ? `For ${emergencySelectedState}, our Central HQ team will coordinate local retrieval.`
-                        : "Select your state to connect directly with your nearest Sankara Eye Hospital branch."}
-                    </p>
-
-                    <p className="text-[11px] text-slate-500 font-semibold flex items-center gap-1 pt-1">
-                      <span>ℹ️</span> Govt National Helpline <strong className="text-slate-700">1919</strong> is also available as secondary option.
+                    <p className="text-xs text-slate-500 font-medium flex items-center gap-1.5 pt-1">
+                      <Info className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                      <span>Govt National Helpline <strong className="text-slate-800 font-bold">1919</strong> is also available as secondary option.</span>
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+                  <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-stretch gap-2.5 w-full md:w-auto shrink-0">
                     <a
                       href="tel:+919000019190"
-                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white text-xs sm:text-sm font-black px-5 py-3 rounded-xl shadow-md transition-all hover:scale-[1.03]"
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white text-xs sm:text-sm font-extrabold px-5 py-3.5 rounded-xl shadow-md shadow-orange-600/20 transition-all hover:scale-[1.02] whitespace-nowrap"
                     >
-                      <Phone className="h-4 w-4 animate-bounce" /> Call HQ: +91 90000 19190
+                      <Phone className="h-4 w-4 animate-bounce" />
+                      <span>Call HQ: +91 90000 19190</span>
                     </a>
                     <a
                       href="tel:1919"
-                      className="inline-flex items-center justify-center gap-1 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold px-3 py-3 rounded-xl border border-slate-200 transition-colors"
+                      className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-bold px-4 py-3.5 rounded-xl border border-slate-200/80 shadow-xs transition-colors whitespace-nowrap"
                       title="Govt Helpline 1919"
                     >
-                      Govt 1919
+                      <span>Govt 1919</span>
                     </a>
                   </div>
                 </div>
@@ -468,7 +486,7 @@ export default function Home() {
 
             {/* WIDE EMERGENCY FORM OR SUCCESS VIEW */}
             {isSubmitted && submittedUnit ? (
-              <Card className="w-full max-w-3xl border border-emerald-200/60 shadow-[0_8px_35px_rgb(0,0,0,0.06)] rounded-3xl bg-white overflow-hidden relative text-left transition-all duration-300 mx-auto">
+              <Card className="w-full max-w-4xl border border-emerald-200/60 shadow-[0_8px_35px_rgb(0,0,0,0.06)] rounded-3xl bg-white overflow-hidden relative text-left transition-all duration-300 mx-auto">
                 <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 to-green-500" />
                 <CardContent className="p-8 md:p-12 space-y-8 flex flex-col items-center text-center">
                   <div className="h-20 w-20 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 shadow-inner">
@@ -508,9 +526,9 @@ export default function Home() {
                 </CardContent>
               </Card>
             ) : (
-            <Card className="w-full max-w-5xl border border-orange-100 shadow-[0_8px_35px_rgb(255,122,24,0.08)] rounded-[2rem] bg-white overflow-hidden relative text-left transition-all duration-300">
+            <Card className="w-full max-w-4xl border border-orange-100/80 shadow-[0_12px_40px_rgb(255,122,24,0.08)] rounded-3xl bg-white overflow-hidden relative text-left transition-all duration-300">
               <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-400 to-amber-500" />
-              <CardContent className="p-6 md:p-12 space-y-10">
+              <CardContent className="p-6 md:p-10 space-y-8">
                 
                 <div className="flex flex-col items-center justify-center text-center gap-4 border-b border-gray-100 pb-8">
                   <div className="h-16 w-16 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 shrink-0 shadow-sm border border-orange-100">
