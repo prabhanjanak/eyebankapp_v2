@@ -9,7 +9,9 @@
 
 # Dependency caches
 node_modules
+**/node_modules
 node_modules.nosync
+**/node_modules.nosync
 .pnpm-store
 .npm
 .yarn
