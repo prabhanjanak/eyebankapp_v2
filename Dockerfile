@@ -8,7 +8,7 @@
 # ------------------------------------------------------------------------------
 FROM node:20-alpine AS base
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10.5.2 --activate
+RUN npm install -g pnpm@9.15.4
 RUN apk add --no-cache libc6-compat
 
 # ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ COPY lib/db/package.json ./lib/db/
 COPY scripts/package.json ./scripts/
 
 # Install all workspace dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # Copy application source code
 COPY . .
@@ -46,7 +46,7 @@ WORKDIR /app
 
 # Install curl for container health check
 RUN apk add --no-cache curl libc6-compat
-RUN corepack enable && corepack prepare pnpm@10.5.2 --activate
+RUN npm install -g pnpm@9.15.4
 
 ENV NODE_ENV=production
 ENV PORT=8080
