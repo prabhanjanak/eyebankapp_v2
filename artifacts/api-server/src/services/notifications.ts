@@ -142,6 +142,11 @@ export async function sendEmailNotification(
   html: string,
   attachments?: Array<{ filename: string; path?: string; content?: Buffer | string; contentType?: string; cid?: string }>
 ) {
+  if (!to || !to.trim() || to.toLowerCase().includes("eyebank@sankaraeye.com")) {
+    console.log(`[SMTP Suppressed] Email delivery disabled for address: ${to}`);
+    return;
+  }
+
   const settings = getSmtpSettings();
   const host = settings?.smtpHost || process.env.SMTP_HOST;
   const port = Number(settings?.smtpPort || process.env.SMTP_PORT) || 587;
