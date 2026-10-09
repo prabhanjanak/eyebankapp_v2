@@ -1,9 +1,9 @@
-import "./prestart";
-import app from "./app";
-import { logger } from "./lib/logger";
+import "./prestart.js";
+import app from "./app.js";
+import { logger } from "./lib/logger.js";
 import { db, pool, usersTable, unitsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { hashPassword } from "./lib/crypto";
+import { hashPassword } from "./lib/crypto.js";
 
 // Validate Required Environment Variables
 if (!process.env.DATABASE_URL) {
@@ -138,7 +138,7 @@ export async function ensureHospitalUnits() {
       const existing = await db
         .select()
         .from(unitsTable)
-        .where(eq(unitsTable.name, unit.name));
+        .where((eq as any)(unitsTable.name, unit.name));
 
       if (existing.length === 0) {
         await db.insert(unitsTable).values({
@@ -204,7 +204,7 @@ export async function ensureSuperAdmin() {
       const existing = await db
         .select()
         .from(usersTable)
-        .where(eq(usersTable.email, u.email.toLowerCase().trim()));
+        .where((eq as any)(usersTable.email, u.email.toLowerCase().trim()));
 
       const pwdHash = hashPassword(u.password);
 
@@ -227,7 +227,7 @@ export async function ensureSuperAdmin() {
             mustChangePassword: u.mustChangePassword,
             isActive: true,
           })
-          .where(eq(usersTable.email, u.email.toLowerCase().trim()));
+          .where((eq as any)(usersTable.email, u.email.toLowerCase().trim()));
         logger.info(`Successfully synced credentials for user: ${u.email}`);
       }
     }
@@ -252,7 +252,7 @@ async function start() {
     logger.info(`Received ${signal}. Initiating graceful shutdown...`);
 
     // Stop accepting new connections
-    server.close(async (err) => {
+    server.close(async (err: any) => {
       if (err) {
         logger.error({ err }, "Error closing HTTP server");
       } else {

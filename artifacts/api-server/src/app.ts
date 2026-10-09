@@ -4,8 +4,8 @@ import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import path from "node:path";
 import fs from "node:fs";
-import router from "./routes";
-import { logger } from "./lib/logger";
+import router from "./routes/index.js";
+import { logger } from "./lib/logger.js";
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
 
@@ -32,17 +32,17 @@ const ALLOWED_ORIGINS = [
 ];
 
 app.use(
-  pinoHttp({
+  (pinoHttp as any)({
     logger,
     serializers: {
-      req(req) {
+      req(req: any) {
         return {
           id: req.id,
           method: req.method,
           url: req.url?.split("?")[0],
         };
       },
-      res(res) {
+      res(res: any) {
         return {
           statusCode: res.statusCode,
         };
@@ -72,7 +72,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const healthHandler = async (_req: Request, res: Response): Promise<void> => {
   try {
     const startTime = Date.now();
-    await db.execute(sql`SELECT 1`);
+    await db.execute(sql`SELECT 1` as any);
     const dbLatencyMs = Date.now() - startTime;
 
     res.status(200).json({
