@@ -75,3 +75,5 @@ android/build/
 capacitor-cordova-android-plugins/
 releases/*.apk
 scratch/
+.vercel
+.env*
