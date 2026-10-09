@@ -155,6 +155,11 @@ export async function sendEmailNotification(
   const pass = settings?.password || process.env.SMTP_PASS;
   const fromName = settings?.fromName || "Sankara Eye Hospital";
 
+  if (user && user.toLowerCase().includes("eyebank@sankaraeye.com")) {
+    console.log("[SMTP Suppressed] Sender email eyebank@sankaraeye.com is disabled.");
+    return;
+  }
+
   if (!host || !user || !pass) {
     console.log(`[SMTP Stub] To: ${to} | Subject: ${subject}`);
     if (attachments && attachments.length > 0) {

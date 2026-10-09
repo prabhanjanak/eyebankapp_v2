@@ -569,7 +569,10 @@ export default function Home() {
                     <HeartHandshake className="h-8 w-8" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-extrabold text-gray-900 leading-tight">Eye Donation Request</h2>
+                    <h2 className="text-3xl font-extrabold text-gray-900 leading-tight">
+                      Eye Donation Request<br />
+                      <span className="text-2xl text-orange-600 font-extrabold block mt-1">Eye Retrieval</span>
+                    </h2>
                     <p className="text-sm sm:text-base text-gray-600 font-bold mt-2 max-w-xl mx-auto leading-relaxed">
                       We share your grief, We feel sorry for your loss<br />
                       Please provide few details so our medical retrieval team can assist you immediately.
